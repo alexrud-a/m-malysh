@@ -18,7 +18,6 @@ get_header();
 <div id="app">
 </div>
 
-    <script src="/wp-content/themes/malysh/dist/js/chunk-vendors.js"></script>
     <script src="/wp-content/themes/malysh/dist/js/index.js"></script>
 
 
