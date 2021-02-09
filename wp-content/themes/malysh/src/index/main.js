@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Home from "@/index/Home";
+import { BootstrapVue } from 'bootstrap-vue'
 
+Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
 

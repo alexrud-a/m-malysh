@@ -25,5 +25,12 @@ module.exports = {
             filename: 'company.html',
             title: 'Company',
         },
+    },
+    css: {
+        loaderOptions: {
+            scss: {
+                additionalData: '@import "~@/assets/style.scss";'
+            }
+        }
     }
 }
