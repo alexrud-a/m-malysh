@@ -3,8 +3,8 @@ module.exports = {
     pages: {
         index: {
             entry: 'src/index/main.js',
-            template: 'public/index.html',
-            filename: 'index.html',
+            template: '/index.php',
+            filename: 'index.php',
             title: 'Home',
         },
         company: {
