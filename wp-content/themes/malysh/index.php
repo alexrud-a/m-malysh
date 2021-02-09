@@ -17,7 +17,7 @@ get_header();
 
     <script src="/wp-content/themes/malysh/malysh/dist/js/chunk-vendors.js"></script>
     <script src="/wp-content/themes/malysh/malysh/dist/js/index.js"></script>
-<div id="home">
+<div id="app">
 </div>
 	<main id="primary" class="site-main">
 
