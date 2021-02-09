@@ -15,8 +15,8 @@
 get_header();
 ?>
 
-    <script src="../malysh/malysh/dist/js/chunk-vendors.js"></script>
-    <script src="../malysh/malysh/dist/js/index.js"></script>
+    <script src="/wp-content/themes/malysh/malysh/dist/js/chunk-vendors.js"></script>
+    <script src="/wp-content/themes/malysh/malysh/dist/js/index.js"></script>
 <div id="home">
 </div>
 	<main id="primary" class="site-main">
