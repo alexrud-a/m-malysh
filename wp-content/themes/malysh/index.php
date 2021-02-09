@@ -15,10 +15,13 @@
 get_header();
 ?>
 
-    <script src="/wp-content/themes/malysh/malysh/dist/js/chunk-vendors.js"></script>
-    <script src="/wp-content/themes/malysh/malysh/dist/js/index.js"></script>
 <div id="app">
 </div>
+
+    <script src="/wp-content/themes/malysh/malysh/dist/js/chunk-vendors.js"></script>
+    <script src="/wp-content/themes/malysh/malysh/dist/js/index.js"></script>
+
+
 	<main id="primary" class="site-main">
 
 		<?php
