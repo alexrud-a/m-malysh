@@ -6,4 +6,4 @@ Vue.config.productionTip = false
 
 new Vue({
     render: h => h(Footer),
-}).$mount('#header')
+}).$mount('#footer')
