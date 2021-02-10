@@ -10,7 +10,9 @@
             +7 (961) 109-00-39
           </a>
         </b-col>
-        <b-col md="4"></b-col>
+        <b-col md="4">
+          <img :src="logoUrl"/>
+        </b-col>
         <b-col md="4"></b-col>
       </b-row>
     </b-container>
@@ -22,6 +24,11 @@ import axios from 'axios';
 
 export default {
   name: "Header",
+  data() {
+    return {
+      logoUrl: ''
+    }
+  },
   methods: {
     getContent() {
       return axios('http://m-malysh.ru/wp-json/wp/v2/', {
@@ -37,7 +44,8 @@ export default {
     },
   },
   created() {
-    this.getContent();
+    console.log(window.logo);
+    this.logoUrl = window.logo;
   }
 }
 </script>

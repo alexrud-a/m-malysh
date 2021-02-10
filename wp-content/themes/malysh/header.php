@@ -15,13 +15,16 @@
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="profile" href="https://gmpg.org/xfn/11">
     <link rel="stylesheet" href="/wp-content/themes/malysh/dist/css/chunk-vendors.css">
 	<?php wp_head(); ?>
 </head>
 
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+
+<script>
+    let logo = '<?= wp_get_attachment_image_src( get_theme_mod( 'custom_logo' ), 'full' )[0]; ?>';
+</script>
 <header id="header">
 
 </header>
