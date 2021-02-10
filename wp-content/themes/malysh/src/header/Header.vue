@@ -37,10 +37,12 @@
           </a>
         </b-col>
         <b-col md="4" class="text-center">
-          <img :src="siteInfo.logo"
-               class="img-fluid mb-2"
-               width="300"
-          />
+          <b-link href="/">
+            <img :src="siteInfo.logo"
+                 class="img-fluid mb-2"
+                 width="300"
+            />
+          </b-link>
           <p class="header__desc mb-0">
             {{siteInfo.desc}}
           </p>
@@ -67,22 +69,34 @@
               </b-button>
             </b-form-row>
           </b-form>
-          <a href="#"
+          <b-link href="#"
              class="header__wishlist"
           >
             <svg width="25" height="25">
               <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like"/>
             </svg>
-          </a>
-          <a href="#"
+          </b-link>
+          <b-link href="#"
              class="header__cart"
           >
             <svg width="25" height="25">
               <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#shopping-bag"/>
             </svg>
-          </a>
+          </b-link>
         </b-col>
       </b-row>
+    </b-container>
+    <b-container>
+      <b-nav class="border-top border-bottom border-gray header__menu justify-content-around">
+        <b-nav-item
+            v-for="(link, ind) in this.menu"
+            :key="ind"
+            :href="link.url"
+            class="header__menu-item"
+        >
+          {{link.title}}
+        </b-nav-item>
+      </b-nav>
     </b-container>
   </header>
 </template>
@@ -94,16 +108,18 @@ export default {
   name: "Header",
   data() {
     return {
-      siteInfo: ''
+      siteInfo: '',
+      menu: [],
     }
   },
   methods: {
     getContent() {
-      return axios('http://m-malysh.ru/wp-json/wp/v2/', {
+      return axios('https://m-malysh.ru/wp-json/wp-api-menus/v2/menus/2', {
         method: "GET"
       })
           .then((response) => {
             console.log(response)
+            this.menu = response.data.items;
           })
           .catch((error) => {
             console.log(error);
@@ -113,6 +129,7 @@ export default {
   },
   created() {
     this.siteInfo = window.siteInfo;
+    this.getContent();
   }
 }
 </script>
@@ -167,6 +184,17 @@ export default {
     position: absolute;
     right: 0;
     box-shadow: none!important;
+  }
+
+  &__menu {
+    text-align: center;
+
+    &-item {
+      a {
+        font-size: 18px;
+        color: #000;
+      }
+    }
   }
 }
 </style>
