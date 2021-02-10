@@ -21,16 +21,9 @@ module.exports = {
         },
         company: {
             entry: 'src/company/main.js',
-            template: 'public/company.html',
-            filename: 'company.html',
+            template: '/company.php',
+            filename: 'company.php',
             title: 'Company',
         },
-    },
-    css: {
-        loaderOptions: {
-            scss: {
-                additionalData: '@import "~@/assets/style.scss";'
-            }
-        }
     }
 }

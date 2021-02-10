@@ -15,7 +15,7 @@
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/wp-content/themes/malysh/dist/css/chunk-vendors.css">
+    <link rel="stylesheet" href="/wp-content/themes/malysh/dist/css/header.css">
 	<?php wp_head(); ?>
 </head>
 
@@ -23,7 +23,11 @@
 <?php wp_body_open(); ?>
 
 <script>
-    let logo = '<?= wp_get_attachment_image_src( get_theme_mod( 'custom_logo' ), 'full' )[0]; ?>';
+    var siteInfo = {
+        logo: '<?= wp_get_attachment_image_src( get_theme_mod( 'custom_logo' ), 'full' )[0]; ?>',
+        name: '<?= bloginfo( 'name' );?>',
+        desc: '<?= bloginfo('description');?>'
+    }
 </script>
 <header id="header">
 
