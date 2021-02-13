@@ -51,6 +51,7 @@ if ( ! function_exists( 'malysh_setup' ) ) :
 		register_nav_menus(
 			array(
 				'menu-1' => esc_html__( 'Primary', 'malysh' ),
+                'menu-2' => esc_html__( 'Footer', 'malysh' ),
 			)
 		);
 

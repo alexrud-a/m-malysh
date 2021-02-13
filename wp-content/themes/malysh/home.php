@@ -10,5 +10,4 @@ Template Name: Home
     <script src="/wp-content/themes/malysh/dist/js/index.js"></script>
 
 <?php
-get_sidebar();
 get_footer();

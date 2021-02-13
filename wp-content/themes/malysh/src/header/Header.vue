@@ -30,17 +30,16 @@
           <p class="header__slogan mb-0">
             Есть вопросы? - Позвони
           </p>
-          <a href="#"
+          <a :href="'tel:'+contacts.phone"
              class="header__phone-link"
           >
-            +7 (961) 109-00-39
+            {{contacts.phone}}
           </a>
         </b-col>
         <b-col md="4" class="text-center">
           <b-link href="/">
             <img :src="siteInfo.logo"
                  class="img-fluid mb-2"
-                 width="300"
             />
           </b-link>
           <p class="header__desc mb-0">
@@ -110,10 +109,11 @@ export default {
     return {
       siteInfo: '',
       menu: [],
+      contacts: [],
     }
   },
   methods: {
-    getContent() {
+    getMenu() {
       return axios('https://m-malysh.ru/wp-json/wp-api-menus/v2/menus/2', {
         method: "GET"
       })
@@ -124,16 +124,30 @@ export default {
             console.log(error);
             return error;
           })
+    },
+    getContacts() {
+      return axios('https://m-malysh.ru/wp-json/wp/v2/pages/35', {
+        method: "GET"
+      })
+          .then((response) => {
+            this.contacts = response.data.acf.contacts;
+          })
+          .catch((error) => {
+            console.log(error);
+            return error;
+          })
     }
   },
   created() {
     this.siteInfo = window.siteInfo;
-    this.getContent();
+    this.getMenu();
+    this.getContacts();
   }
 }
 </script>
 
 <style lang="scss">
+$blue: #0abab5;
 .header {
   &__top {
     background-color: #303030;
@@ -192,6 +206,29 @@ export default {
       a {
         font-size: 18px;
         color: #000;
+        position: relative;
+
+        &::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 13px;
+          height: 10px;
+          background-color: $blue;
+          border-radius: 2px;
+          transition: all .3s ease-in-out;
+          opacity: 0;
+          z-index: -1;
+        }
+
+        &:hover, &:focus, &:active {
+          color: #000;
+
+          &::after {
+            opacity: 1;
+          }
+        }
       }
     }
   }

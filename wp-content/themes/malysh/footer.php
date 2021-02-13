@@ -15,6 +15,7 @@
 <footer id="footer">
 
 </footer>
+<link rel="stylesheet" href="/wp-content/themes/malysh/dist/css/footer.css">
 <script src="/wp-content/themes/malysh/dist/js/footer.js"></script>
 </body>
 </html>

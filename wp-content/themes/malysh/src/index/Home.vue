@@ -24,7 +24,7 @@
           </template>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row v-if="categories.length > 0">
         <b-col lg="7" md="6">
           <div class="cat cat--big">
             <b-link :href="'/product-category/'+categories[0].slug">
@@ -78,6 +78,33 @@
           </div>
         </b-col>
       </b-row>
+      <b-row v-if="content.length > 0" class="justify-content-center mt-5 mb-5">
+        <b-col class="content-text">
+          <div v-html="content"></div>
+        </b-col>
+      </b-row>
+      <b-row v-if="advantages.length > 0"
+             class="advantages justify-content-center"
+      >
+        <div class="advantages__item"
+             v-for="(advantage, ind) in advantages"
+             :key="ind"
+        >
+          <svg width="80" height="80">
+            <use :xlink:href="'/wp-content/themes/malysh/img/sprite.svg#'+advantage.icon"/>
+          </svg>
+          <p class="advantages__text">
+            {{ advantage.text }}
+          </p>
+        </div>
+        <b-col sm="12" class="text-center mt-5">
+          <b-link href="/shop"
+                  class="btn btn-blue"
+          >
+            В каталог
+          </b-link>
+        </b-col>
+      </b-row>
     </b-container>
   </div>
 </template>
@@ -100,6 +127,8 @@ export default {
   data() {
     return {
       slider: [],
+      content: [],
+      advantages: [],
       categories: [],
     }
   },
@@ -113,6 +142,8 @@ export default {
       })
           .then((response) => {
             this.slider = response.data.acf.slider;
+            this.content = response.data.content.rendered;
+            this.advantages = response.data.acf.advantages;
           })
           .catch((error) => {
             console.log(error);
@@ -126,7 +157,6 @@ export default {
         orderby: 'count'
       })
           .then((response) => {
-            console.log(response);
             this.categories = response.data;
           })
           .catch((error) => {
@@ -229,6 +259,27 @@ export default {
       top: 60%;
       left: 15%;
     }
+  }
+}
+
+.content-text {
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.advantages {
+  margin: 0 auto 40px;
+  max-width: 1000px;
+
+  &__item {
+    text-align: center;
+    min-width: 200px;
+    margin-bottom: 20px;
+  }
+
+  &__text {
+    max-width: 100px;
+    margin: 40px auto 10px;
   }
 }
 </style>
