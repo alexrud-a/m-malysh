@@ -57,6 +57,7 @@ $font-weight-light: 200;
 $blue: #0abab5;
 
 @import '~bootstrap/scss/bootstrap';
+@import '~vue-agile/dist/VueAgile';
 
 a {
   transition: $transition-base;
@@ -103,3 +104,17 @@ input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration { display: none; }
+
+.btn-blue {
+  background-color: $blue;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 5px 35px;
+
+  &:hover {
+    color: #fff;
+    background-color: darken($blue, 10);
+  }
+}

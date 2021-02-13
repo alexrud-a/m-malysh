@@ -19,6 +19,18 @@ module.exports = {
             filename: 'index.php',
             title: 'Home',
         },
+        shop: {
+            entry: 'src/shop/main.js',
+            template: '/woocommerce.php',
+            filename: 'woocommerce.php',
+            title: 'Shop',
+        },
+        product: {
+            entry: 'src/product/main.js',
+            template: '/woocommerce.php',
+            filename: 'product.php',
+            title: 'Shop',
+        },
         company: {
             entry: 'src/company/main.js',
             template: '/company.php',

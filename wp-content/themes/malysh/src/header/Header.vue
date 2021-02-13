@@ -69,14 +69,14 @@
               </b-button>
             </b-form-row>
           </b-form>
-          <b-link href="#"
+          <b-link href="/wishlist"
              class="header__wishlist"
           >
             <svg width="25" height="25">
               <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like"/>
             </svg>
           </b-link>
-          <b-link href="#"
+          <b-link href="/cart"
              class="header__cart"
           >
             <svg width="25" height="25">
@@ -118,14 +118,13 @@ export default {
         method: "GET"
       })
           .then((response) => {
-            console.log(response)
             this.menu = response.data.items;
           })
           .catch((error) => {
             console.log(error);
             return error;
           })
-    },
+    }
   },
   created() {
     this.siteInfo = window.siteInfo;
