@@ -23,3 +23,6 @@ pnpm-debug.log*
 
 /wp-admin
 /wp-includes
+/wp-content/uploads
+/wp-content/languages
+/wp-content/plugins
