@@ -1,10 +1,26 @@
 <template>
   <div id="app">
-    <b-container>
+    <b-container class="pt-5 pb-5">
       <b-row>
         <b-col sm="12">
+          <b-breadcrumb>
+            <b-breadcrumb-item href="/">
+              Главная
+            </b-breadcrumb-item>
+            <b-breadcrumb-item active>
+              {{ title }}
+            </b-breadcrumb-item>
+          </b-breadcrumb>
+        </b-col>
+        <b-col xl="7" lg="8" md="12">
+          <h1>
+            {{ title }}
+          </h1>
           <div v-if="content.length > 0" v-html="content">
           </div>
+        </b-col>
+        <b-col xl="5" lg="4" md="12">
+          <Form/>
         </b-col>
       </b-row>
     </b-container>
@@ -13,11 +29,14 @@
 
 <script>
 import axios from "axios";
+import Form from "@/components/Form";
 
 export default {
   name: "Company",
+  components: {Form},
   data() {
     return {
+      title: '',
       content: [],
     }
   },
@@ -27,6 +46,7 @@ export default {
         method: "GET"
       })
           .then((response) => {
+            this.title = response.data.title.rendered;
             this.content = response.data.content.rendered;
           })
           .catch((error) => {

@@ -144,7 +144,10 @@ function malysh_scripts() {
 	wp_enqueue_style( 'malysh-style', get_stylesheet_uri(), array(), _S_VERSION );
 	wp_style_add_data( 'malysh-style', 'rtl', 'replace' );
 
-	wp_enqueue_script( 'malysh-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
+    wp_enqueue_style( 'malysh-css', get_template_directory_uri() . '/dist/css/chunk-vendors.css', array(), _S_VERSION );
+    wp_enqueue_style( 'malysh-css-header', get_template_directory_uri() . '/dist/css/header.css', array(), _S_VERSION );
+
+    wp_enqueue_script( 'agile', 'https://unpkg.com/vue-agile', array(), _S_VERSION, true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );

@@ -12,10 +12,7 @@
 ?>
 
 <?php wp_footer(); ?>
-<footer id="footer">
-
-</footer>
-<link rel="stylesheet" href="/wp-content/themes/malysh/dist/css/footer.css">
+<footer id="footer"></footer>
 <script src="/wp-content/themes/malysh/dist/js/footer.js"></script>
 </body>
 </html>

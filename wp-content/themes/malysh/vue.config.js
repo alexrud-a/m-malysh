@@ -37,5 +37,23 @@ module.exports = {
             filename: 'company.php',
             title: 'Company',
         },
+        info: {
+            entry: 'src/info/main.js',
+            template: '/info.php',
+            filename: 'info.php',
+            title: 'Info',
+        },
+        support: {
+            entry: 'src/support/main.js',
+            template: '/support.php',
+            filename: 'support.php',
+            title: 'Support',
+        },
+        sales: {
+            entry: 'src/sales/main.js',
+            template: '/sales.php',
+            filename: 'sales.php',
+            title: 'Sales',
+        },
     }
 }

@@ -15,8 +15,6 @@
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/wp-content/themes/malysh/dist/css/header.css">
-    <link rel="stylesheet" href="/wp-content/themes/malysh/dist/css/index.css">
 	<?php wp_head(); ?>
 </head>
 
