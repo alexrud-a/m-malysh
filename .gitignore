@@ -26,3 +26,4 @@ pnpm-debug.log*
 /wp-content/uploads
 /wp-content/languages
 /wp-content/plugins
+/wp-content/upgrade
