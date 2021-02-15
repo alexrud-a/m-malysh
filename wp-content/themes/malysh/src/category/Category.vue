@@ -127,9 +127,8 @@
         <b-col lg="9" md="8">
           <div class="catalog">
             <h1>
-              {{ title }}
+              {{ category.name }}
             </h1>
-            <div v-if="content.length > 0" v-html="content"></div>
             <b-row v-if="products.length > 0" class="justify-content-between">
               <div>
                 <b-link href="#"
@@ -204,7 +203,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import {contains, containsAttributes} from "@/utils";
 
 const WooCommerceRestApi = require("@woocommerce/woocommerce-rest-api").default;
@@ -217,12 +215,11 @@ const WooCommerce = new WooCommerceRestApi({
 });
 
 export default {
-  name: "Shop",
+  name: "Category",
   data() {
     return {
+      category: {},
       breadcrumb: {},
-      title: '',
-      content: [],
       products: [],
       sourcedProducts: [],
       page: 1,
@@ -272,21 +269,10 @@ export default {
     },
   },
   methods: {
-    getContent() {
-      return axios('https://m-malysh.ru/wp-json/wp/v2/pages/28', {
-        method: "GET"
-      })
-          .then((response) => {
-            this.title = response.data.title.rendered;
-            this.content = response.data.content.rendered;
-          })
-          .catch((error) => {
-            console.log(error);
-            return error;
-          })
-    },
     getProducts() {
-      WooCommerce.get('products')
+      WooCommerce.get('products', {
+        category: this.category.term_id,
+      })
           .then((response) => {
             console.log(response);
             this.sourcedProducts = response.data.sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
@@ -303,7 +289,7 @@ export default {
       WooCommerce.get('products/categories', {
         orderby: 'name',
         hide_empty: true,
-        parent: 0
+        parent: this.category.term_id,
       })
           .then((response) => {
             this.filters.categories = response.data;
@@ -432,8 +418,8 @@ export default {
     }
   },
   created() {
+    this.category = window.activeCategory;
     this.breadcrumb = window.breadcrumb;
-    this.getContent();
     this.getProducts();
   }
 }

@@ -171,3 +171,15 @@ function change_posts_per_page( $query ) {
     $query->set( 'posts_per_page', -1 );
 }
 add_action( 'pre_get_posts', 'change_posts_per_page', 1 );
+
+add_filter( 'woocommerce_breadcrumb_defaults', 'jk_woocommerce_breadcrumbs' );
+function jk_woocommerce_breadcrumbs() {
+    return array(
+        'delimiter' => '',
+        'wrap_before' => '<ol class="breadcrumb">',
+        'wrap_after' => '</ol>',
+        'before' => '<li class="breadcrumb-item">',
+        'after' => '</li>',
+        'home' => _x( 'Главная', 'breadcrumb', 'woocommerce' ),
+    );
+}

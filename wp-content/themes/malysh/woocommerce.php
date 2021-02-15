@@ -17,9 +17,19 @@ get_header();
 
     <div id="app"></div>
 
-<?php/* woocommerce_content(); */?>
-<? if ( is_shop() ) : ?>
+<?php/* woocommerce_content(); */ ?>
+<script>
+    var breadcrumb = '<? woocommerce_breadcrumb() ?>';
+</script>
+<? if (is_shop()) : ?>
     <script src="/wp-content/themes/malysh/dist/js/shop.js"></script>
+<? endif; ?>
+<? if (is_product_category()) : ?>
+    <? $category = get_queried_object(); ?>
+    <script>
+        var activeCategory = <? echo json_encode($category) ?>;
+    </script>
+    <script src="/wp-content/themes/malysh/dist/js/category.js"></script>
 <? endif; ?>
 
 <?php

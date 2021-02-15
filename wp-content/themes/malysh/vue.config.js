@@ -25,6 +25,12 @@ module.exports = {
             filename: 'woocommerce.php',
             title: 'Shop',
         },
+        category: {
+            entry: 'src/category/main.js',
+            template: '/woocommerce.php',
+            filename: 'woocommerce.php',
+            title: 'Category',
+        },
         product: {
             entry: 'src/product/main.js',
             template: '/woocommerce.php',
