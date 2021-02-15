@@ -118,26 +118,6 @@ function malysh_content_width() {
 add_action( 'after_setup_theme', 'malysh_content_width', 0 );
 
 /**
- * Register widget area.
- *
- * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
- */
-function malysh_widgets_init() {
-	register_sidebar(
-		array(
-			'name'          => esc_html__( 'Sidebar', 'malysh' ),
-			'id'            => 'sidebar-1',
-			'description'   => esc_html__( 'Add widgets here.', 'malysh' ),
-			'before_widget' => '<section id="%1$s" class="widget %2$s">',
-			'after_widget'  => '</section>',
-			'before_title'  => '<h2 class="widget-title">',
-			'after_title'   => '</h2>',
-		)
-	);
-}
-add_action( 'widgets_init', 'malysh_widgets_init' );
-
-/**
  * Enqueue scripts and styles.
  */
 function malysh_scripts() {
@@ -186,3 +166,8 @@ add_action( 'after_setup_theme', 'woocommerce_support' );
 function woocommerce_support() {
     add_theme_support( 'woocommerce' );
 }
+
+function change_posts_per_page( $query ) {
+    $query->set( 'posts_per_page', -1 );
+}
+add_action( 'pre_get_posts', 'change_posts_per_page', 1 );

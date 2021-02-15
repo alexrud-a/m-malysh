@@ -15,10 +15,12 @@
 get_header();
 ?>
 
-<?php woocommerce_content(); ?>
+    <div id="app"></div>
 
-<div id="app"></div>
+<?php/* woocommerce_content(); */?>
+<? if ( is_shop() ) : ?>
+    <script src="/wp-content/themes/malysh/dist/js/shop.js"></script>
+<? endif; ?>
 
 <?php
-get_sidebar();
 get_footer();
