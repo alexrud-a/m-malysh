@@ -26,54 +26,54 @@
     <b-row v-if="categories.length > 0">
       <b-col lg="7" md="6">
         <div class="cat cat--big">
-          <b-link :href="'/product-category/'+categories[0].slug">
+          <router-link :to="{ name: 'Category', params: {slug: categories[0].slug}}">
             <img :src="categories[0].image.src"
                  :alt="categories[0].image.alt"
                  class="img-fluid cat__img"
             >
-          </b-link>
+          </router-link>
           <p class="cat__name">
             {{ categories[0].name }}
           </p>
-          <b-link :href="'/product-category/'+categories[0].slug"
+          <router-link :to="{ name: 'Category', params: {slug: categories[0].slug}}"
                   class="btn btn-blue"
           >
             В каталог
-          </b-link>
+          </router-link>
         </div>
       </b-col>
       <b-col lg="5" md="6">
         <div class="cat cat--min">
-          <b-link :href="'/product-category/'+categories[1].slug">
+          <router-link :to="{ name: 'Category', params: {slug: categories[1].slug}}">
             <img :src="categories[1].image.src"
                  :alt="categories[1].image.alt"
                  class="img-fluid cat__img"
             >
-          </b-link>
+          </router-link>
           <p class="cat__name">
             {{ categories[1].name }}
           </p>
-          <b-link :href="'/product-category/'+categories[1].slug"
+          <router-link :to="{ name: 'Category', params: {slug: categories[1].slug}}"
                   class="btn btn-blue"
           >
             Смотреть
-          </b-link>
+          </router-link>
         </div>
         <div class="cat cat--min">
-          <b-link :href="'/product-category/'+categories[2].slug">
+          <router-link :to="{ name: 'Category', params: {slug: categories[2].slug}}">
             <img :src="categories[2].image.src"
                  :alt="categories[2].image.alt"
                  class="img-fluid cat__img"
             >
-          </b-link>
+          </router-link>
           <p class="cat__name">
             {{ categories[2].name }}
           </p>
-          <b-link :href="'/product-category/'+categories[2].slug"
+          <router-link :to="{ name: 'Category', params: {slug: categories[2].slug}}"
                   class="btn btn-blue"
           >
             Смотреть
-          </b-link>
+          </router-link>
         </div>
       </b-col>
     </b-row>
@@ -97,11 +97,11 @@
         </p>
       </div>
       <b-col sm="12" class="text-center mt-5">
-        <b-link href="/shop"
+        <router-link :to="{name: 'Shop'}"
                 class="btn btn-blue"
         >
           В каталог
-        </b-link>
+        </router-link>
       </b-col>
     </b-row>
   </b-container>

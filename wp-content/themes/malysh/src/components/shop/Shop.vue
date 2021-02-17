@@ -178,7 +178,7 @@
                      :key="product.id"
               >
                 <div class="product">
-                  <b-link :href="product.permalink">
+                  <router-link :to="{name: 'Product', params: {slug: product.slug}}">
                     <b-img v-if="product.images.length > 0"
                            :src="product.images[0].src"
                            :alt="product.images[0].alt"
@@ -189,13 +189,13 @@
                     <b-badge v-if="product.on_sale" variant="danger">
                       Акция
                     </b-badge>
-                  </b-link>
+                  </router-link>
                   <div v-if="product.sku.length">
                     Код товара: {{ product.sku }}
                   </div>
-                  <b-link :href="product.permalink">
+                  <router-link :to="{name: 'Product', params: {slug: product.slug}}">
                     {{ product.name }}
-                  </b-link>
+                  </router-link>
                   <div v-html="product.price_html"></div>
                 </div>
               </b-col>

@@ -37,11 +37,11 @@
           </a>
         </b-col>
         <b-col md="4" class="text-center">
-          <b-link href="/">
+          <router-link :to="{name: 'Home'}">
             <img :src="siteInfo.logo"
                  class="img-fluid mb-2"
             />
-          </b-link>
+          </router-link>
           <p class="header__desc mb-0">
             {{siteInfo.desc}}
           </p>
@@ -68,20 +68,20 @@
               </b-button>
             </b-form-row>
           </b-form>
-          <b-link href="/wishlist"
+          <router-link :to="{name: 'Wishlist'}"
              class="header__wishlist"
           >
             <svg width="25" height="25">
               <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like"/>
             </svg>
-          </b-link>
-          <b-link href="/cart"
+          </router-link>
+          <router-link :to="{name: 'Cart'}"
              class="header__cart"
           >
             <svg width="25" height="25">
               <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#shopping-bag"/>
             </svg>
-          </b-link>
+          </router-link>
         </b-col>
       </b-row>
     </b-container>

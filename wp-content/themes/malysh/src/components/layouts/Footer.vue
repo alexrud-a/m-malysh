@@ -4,12 +4,12 @@
       <b-container>
         <b-row>
           <b-col md="4">
-            <b-link href="/">
+            <router-link :to="{name: 'Home'}">
               <img :src="siteInfo.logo"
                    class="img-fluid mb-2"
                    width="220"
               />
-            </b-link>
+            </router-link>
             <div class="contacts">
               <div class="contacts__item">
                 <a :href="'tel:'+contacts.phone">
@@ -36,12 +36,12 @@
                 </span>
               </div>
             </div>
-            <b-link
-                href="/support"
+            <router-link
+                :to="{name: 'Support'}"
                 class="btn btn-blue-outline"
             >
               Служба поддержки
-            </b-link>
+            </router-link>
           </b-col>
           <b-col md="4" class="align-self-center">
             <b-nav vertical class="footer__menu">
