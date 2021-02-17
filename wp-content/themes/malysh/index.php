@@ -11,28 +11,28 @@
  *
  * @package malysh
  */
-
-
-get_header();
 ?>
+    <!doctype html>
+<html <? language_attributes(); ?>>
+    <head>
+        <meta charset="<? bloginfo('charset'); ?>">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <? wp_head(); ?>
+    </head>
 
-    <main id="primary" class="site-main">
+<body <? body_class(); ?>>
+<? wp_body_open(); ?>
 
-        <?php
-        while ( have_posts() ) :
-            the_post();
+    <script>
+        var siteInfo = {
+            logo: '<?= wp_get_attachment_image_src(get_theme_mod('custom_logo'), 'full')[0]; ?>',
+            name: '<?= bloginfo('name');?>',
+            desc: '<?= bloginfo('description');?>'
+        }
+    </script>
+    <div id="app"></div>
 
-            get_template_part( 'template-parts/content', 'page' );
+    <script src="/wp-content/themes/malysh/dist/js/chunk-vendors.js"></script>
+    <script src="/wp-content/themes/malysh/dist/js/app.js"></script>
 
-            // If comments are open or we have at least one comment, load up the comment template.
-            if ( comments_open() || get_comments_number() ) :
-                comments_template();
-            endif;
-
-        endwhile; // End of the loop.
-        ?>
-
-    </main><!-- #main -->
-
-<?php
-get_footer();
+<? wp_footer(); ?>

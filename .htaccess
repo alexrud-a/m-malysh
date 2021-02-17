@@ -9,6 +9,7 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
 # BEGIN WordPress
 
+RewriteEngine On
 RewriteBase /
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
