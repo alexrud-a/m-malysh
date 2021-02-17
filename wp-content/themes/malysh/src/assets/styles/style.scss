@@ -58,16 +58,12 @@ $blue: #0abab5;
 
 @import '~bootstrap/scss/bootstrap';
 @import '~bootstrap-vue/dist/bootstrap-vue.css';
-@import '~vue-agile/dist/VueAgile';
+@import '~vue-agile/dist/VueAgile.css';
 
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-#app {
-  flex: 1 0 auto;
 }
 
 .breadcrumb {
@@ -243,10 +239,12 @@ h1, h2, h3, h4, h5, h6 {
           z-index: -1;
         }
 
-        &:hover, &:focus, &:active {
+        &:hover, &:focus, &:active,
+        .router-link-active {
           color: #000;
 
-          &::after {
+          &::after,
+          .router-link-active::after {
             opacity: 1;
           }
         }
@@ -299,7 +297,8 @@ h1, h2, h3, h4, h5, h6 {
       a {
         color: #000;
 
-        &:hover {
+        &:hover,
+        .router-link-active {
           color: #aaaaaa;
           text-decoration: underline;
         }

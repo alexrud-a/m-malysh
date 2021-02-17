@@ -125,7 +125,7 @@ function malysh_scripts() {
 	wp_style_add_data( 'malysh-style', 'rtl', 'replace' );
 
     wp_enqueue_style( 'malysh-css', get_template_directory_uri() . '/dist/css/chunk-vendors.css', array(), _S_VERSION );
-    wp_enqueue_style( 'malysh-css-header', get_template_directory_uri() . '/dist/css/header.css', array(), _S_VERSION );
+    wp_enqueue_style( 'malysh-css-app', get_template_directory_uri() . '/dist/css/app.css', array(), _S_VERSION );
 
     wp_enqueue_script( 'agile', 'https://unpkg.com/vue-agile', array(), _S_VERSION, true );
 
@@ -162,24 +162,7 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
-add_action( 'after_setup_theme', 'woocommerce_support' );
-function woocommerce_support() {
-    add_theme_support( 'woocommerce' );
-}
-
 function change_posts_per_page( $query ) {
     $query->set( 'posts_per_page', -1 );
 }
 add_action( 'pre_get_posts', 'change_posts_per_page', 1 );
-
-add_filter( 'woocommerce_breadcrumb_defaults', 'jk_woocommerce_breadcrumbs' );
-function jk_woocommerce_breadcrumbs() {
-    return array(
-        'delimiter' => '',
-        'wrap_before' => '<ol class="breadcrumb">',
-        'wrap_after' => '</ol>',
-        'before' => '<li class="breadcrumb-item">',
-        'after' => '</li>',
-        'home' => _x( 'Главная', 'breadcrumb', 'woocommerce' ),
-    );
-}
