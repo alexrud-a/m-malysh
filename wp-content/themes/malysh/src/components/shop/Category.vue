@@ -12,8 +12,7 @@
         </b-breadcrumb>
       </b-col>
       <b-col lg="3" md="4">
-        <ProductFilter v-if="products.length"
-                       :filters="filters"
+        <ProductFilter :filters="filters"
                        :isFilterActive="isFilterActive"
                        @filtered="filteredProducts"
                        @reset="resetFilters"

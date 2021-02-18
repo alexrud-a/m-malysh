@@ -82,7 +82,7 @@
       </b-form-group>
 
       <!--Фильтр по цене-->
-      <b-form-group>
+      <b-form-group v-if="filters.selected_price.min > 0 && filters.selected_price.max > 0">
         <div class="filter-range">
           <b-form-input type="range"
                         v-model="filters.selected_price.min"
