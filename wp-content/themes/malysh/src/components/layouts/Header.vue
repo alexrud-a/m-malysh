@@ -50,14 +50,12 @@
                class="d-flex align-items-center justify-content-between"
         >
           <b-form class="header__search-form"
-                  role="search"
-                  method="get"
-                  action="https://m-malysh.ru/"
+                  @submit.prevent="searching"
           >
             <b-form-row class="flex-nowrap position-relative">
               <b-form-input type="search"
                             placeholder="Поиск по сайту"
-                            name="s"
+                            v-model="searchVal"
               />
               <b-button class="header__search-form-btn bg-transparent border-0"
                         type="submit"
@@ -113,6 +111,7 @@ export default {
       siteInfo: '',
       menu: [],
       contacts: [],
+      searchVal: ''
     }
   },
   methods: {
@@ -139,6 +138,12 @@ export default {
             console.log(error);
             return error;
           })
+    },
+    searching() {
+      this.$router
+          .push({name: 'Search' , query: {search: this.searchVal}})
+          .catch(() => null);
+      this.searchVal = '';
     }
   },
   created() {

@@ -12,164 +12,66 @@
         </b-breadcrumb>
       </b-col>
       <b-col lg="3" md="4">
-        <div class="filter">
-          <h3>
-            Подобрать товар
-          </h3>
-          <b-form @submit.prevent="filteredProducts" @reset.prevent="resetFilters">
-            <!--Категории-->
-            <b-form-group label="Категория">
-              <b-form-checkbox-group
-                  id="checkbox-group-1"
-                  v-model="filters.selected_categories"
-                  name="categories"
-                  stacked
-                  @change="filteredProducts"
-              >
-                <b-form-checkbox
-                    v-for="cat in filters.categories"
-                    :key="cat.id"
-                    :value="cat.id"
-                >
-                  {{ cat.name }}
-                </b-form-checkbox>
-              </b-form-checkbox-group>
-            </b-form-group>
-
-            <!--Атрибуты подкатегории-->
-            <b-form-group label="Подкатегория">
-              <b-form-checkbox-group
-                  id="checkbox-group-2"
-                  v-model="filters.selected_subCategories"
-                  name="subCategories"
-                  stacked
-                  @change="filteredProducts"
-              >
-                <b-form-checkbox
-                    v-for="subCat in filters.subCategories"
-                    :key="subCat.id"
-                    :value="subCat.name"
-                >
-                  {{ subCat.name }}
-                </b-form-checkbox>
-              </b-form-checkbox-group>
-            </b-form-group>
-
-            <!--Атрибуты размер-->
-            <b-form-group label="Размер">
-              <b-form-checkbox-group
-                  id="checkbox-group-3"
-                  v-model="filters.selected_sizes"
-                  name="sizes"
-                  stacked
-                  @change="filteredProducts"
-              >
-                <b-form-checkbox
-                    v-for="size in filters.sizes"
-                    :key="size.id"
-                    :value="size.name"
-                >
-                  {{ size.name }}
-                </b-form-checkbox>
-              </b-form-checkbox-group>
-            </b-form-group>
-
-            <!--Атрибуты рост-->
-            <b-form-group label="Рост">
-              <b-form-checkbox-group
-                  id="checkbox-group-3"
-                  v-model="filters.selected_height"
-                  name="height"
-                  stacked
-                  @change="filteredProducts"
-              >
-                <b-form-checkbox
-                    v-for="item in filters.height"
-                    :key="item.id"
-                    :value="item.name"
-                >
-                  {{ item.name }}
-                </b-form-checkbox>
-              </b-form-checkbox-group>
-            </b-form-group>
-
-            <!--Фильтр по цене-->
-            <b-form-group>
-              <div class="filter-range">
-                <b-form-input type="range"
-                              v-model="filters.selected_price.min"
-                              :min="filters.price.min"
-                              :max="filters.price.max"
-                              @change="filteredProducts"
-                />
-                <b-form-input type="range"
-                              v-model="filters.selected_price.max"
-                              :min="filters.price.min"
-                              :max="filters.price.max"
-                              @change="filteredProducts"
-                />
-              </div>
-              <span class="price-min">
-                  {{ filters.selected_price.min }}
-                </span>
-              <span class="price-max">
-                  {{ filters.selected_price.max }}
-                </span>
-            </b-form-group>
-
-            <b-form-group>
-              <b-btn type="submit"
-                     class="btn btn-blue">
-                Применить
-              </b-btn>
-            </b-form-group>
-            <b-form-group v-if="isFilterActive">
-              <b-btn type="reset"
-                     class="btn btn-blue">
-                Сбросить фильтр
-              </b-btn>
-            </b-form-group>
-          </b-form>
-        </div>
+        <ProductFilter v-if="products.length"
+                       :filters="filters"
+                       :isFilterActive="isFilterActive"
+                       @filtered="filteredProducts"
+                       @reset="resetFilters"
+        />
       </b-col>
       <b-col lg="9" md="8">
         <div class="catalog">
           <h1>
             {{ category.name }}
           </h1>
-          <b-row v-if="products.length > 0" class="justify-content-between">
-            <div>
-              <b-link href="#"
-                      class="sorted-link"
-                      :class="{'sorted-link--active': sortType === 'date'}"
-                      @click.prevent="filteredProducts('date')"
-              >
-                по новизне
-              </b-link>
-              <b-link href="#"
-                      class="sorted-link"
-                      :class="{'sorted-link--active': sortType === 'price'}"
-                      @click.prevent="filteredProducts('price')"
-              >
-                по цене
-              </b-link>
-              <b-link href="#"
-                      class="sorted-link"
-                      :class="{'sorted-link--active': sortType === 'rated'}"
-                      @click.prevent="filteredProducts('rated')"
-              >
-                по популярности
-              </b-link>
-            </div>
-            <div>
-              {{ products.length }} товаров |
-              Стр. {{ page }} / {{ setPages }} |
-              <b-link v-if="page > 1" href="#" @click.prevent="page = page - 1">Предыдущая</b-link>
-              |
-              <b-link v-if="page < setPages" href="#" @click.prevent="page = page + 1">Следующая</b-link>
-            </div>
-          </b-row>
-          <b-container class="p-0" v-if="products.length > 0">
+          <b-container v-if="products.length" class="mt-4 mb-5">
+            <b-row class="justify-content-between">
+              <div>
+                <b-link href="#"
+                        class="sorted-link"
+                        :class="{'sorted-link--active': sortType === 'date'}"
+                        @click.prevent="filteredProducts(null, 'date')"
+                >
+                  по новизне
+                </b-link>
+                <b-link href="#"
+                        class="sorted-link"
+                        :class="{'sorted-link--active': sortType === 'price'}"
+                        @click.prevent="filteredProducts(null, 'price')"
+                >
+                  по цене
+                </b-link>
+                <b-link href="#"
+                        class="sorted-link"
+                        :class="{'sorted-link--active': sortType === 'rated'}"
+                        @click.prevent="filteredProducts(null, 'rated')"
+                >
+                  по популярности
+                </b-link>
+              </div>
+              <div>
+                <span>{{ products.length }} товаров | </span>
+                <span>Стр. {{ page }} / {{ setPages }}</span>
+                <span v-if="page > 1"> | </span>
+                <b-link class="pagination-link"
+                        v-if="page > 1"
+                        href="#"
+                        @click.prevent="page = page - 1"
+                >
+                  Предыдущая
+                </b-link>
+                <span v-if="page < setPages"> | </span>
+                <b-link class="pagination-link"
+                        v-if="page < setPages"
+                        href="#"
+                        @click.prevent="page = page + 1"
+                >
+                  Следующая
+                </b-link>
+              </div>
+            </b-row>
+          </b-container>
+          <b-container class="p-0" v-if="products.length">
             <b-row>
               <b-col md="4"
                      sm="6"
@@ -212,9 +114,11 @@
 <script>
 import {mapActions, mapGetters} from 'vuex'
 import {contains, containsAttributes} from "@/utils";
+import ProductFilter from "@/components/shop/ProductFilter";
 
 export default {
   name: "Category",
+  components: {ProductFilter},
   data() {
     return {
       category: [],
@@ -287,7 +191,10 @@ export default {
       'GET_SIZES',
       'GET_HEIGHT'
     ]),
-    filteredProducts(sort) {
+    filteredProducts(filters, sort) {
+      if (filters !== null) {
+        this.filters = filters;
+      }
       this.isFilterActive = true;
       //выбираем все товары которые есть в выбранных категориях
       let filtersProducts = this.sourcedProducts.slice();
@@ -367,6 +274,7 @@ export default {
       }
 
       this.products = filtersProducts;
+      this.page = 1;
     },
     resetFilters() {
       this.isFilterActive = false;
@@ -394,7 +302,7 @@ export default {
         this.GET_PRODUCTS()
             .then((response) => {
               if (response.data) {
-                this.sourcedProducts = response.data.slice().filter(product => product.categories.filter(cat => cat.id === this.category.id)).sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
+                this.sourcedProducts = response.data.slice().filter(product => contains(product.categories, [this.category.id], 'id')).sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
                 this.products = this.sourcedProducts.slice();
                 this.filters.price.min = Math.min(...this.products.slice().map(product => product.price));
                 this.filters.price.max = Math.max(...this.products.slice().map(product => product.price));
@@ -416,7 +324,7 @@ export default {
     this.GET_PRODUCTS()
         .then((response) => {
           if (response.data) {
-            this.sourcedProducts = response.data.slice().filter(product => product.categories.filter(cat => cat.id === this.category.id)).sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
+            this.sourcedProducts = response.data.slice().filter(product => contains(product.categories, [this.category.id], 'id')).sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
             this.products = this.sourcedProducts.slice();
             this.filters.price.min = Math.min(...this.products.slice().map(product => product.price));
             this.filters.price.max = Math.max(...this.products.slice().map(product => product.price));

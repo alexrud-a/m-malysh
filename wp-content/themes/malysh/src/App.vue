@@ -2,7 +2,7 @@
   <div id="app">
     <Header/>
     <transition>
-      <router-view/>
+      <router-view class="content"/>
     </transition>
     <Footer/>
   </div>
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style lang="scss">
-#app {
+.content {
   flex: 1 0 auto;
 }
 </style>

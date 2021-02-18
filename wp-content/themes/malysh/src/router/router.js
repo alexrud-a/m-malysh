@@ -9,6 +9,8 @@ import Category from "@/components/shop/Category";
 import Product from "@/components/shop/Product";
 import Wishlist from "@/components/shop/Wishlist";
 import Checkout from "@/components/shop/Checkout";
+import Search from "@/components/search/Search";
+import NotFound from "@/components/404/NotFound";
 
 Vue.use(Router);
 
@@ -66,6 +68,16 @@ let router = new Router({
             path: '/checkout',
             name: 'Checkout',
             component: Checkout
+        },
+        {
+            path: '/search',
+            name: 'Search',
+            component: Search,
+        },
+        {
+            path: "/page-not-found",
+            alias: '*',
+            component: NotFound,
         },
     ]
 });
