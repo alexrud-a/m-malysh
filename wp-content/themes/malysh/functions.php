@@ -166,3 +166,10 @@ function change_posts_per_page( $query ) {
     $query->set( 'posts_per_page', -1 );
 }
 add_action( 'pre_get_posts', 'change_posts_per_page', 1 );
+
+add_action( 'wp_enqueue_scripts', function(){
+
+    wp_deregister_style( 'woocommerce-general' );
+    wp_deregister_style( 'woocommerce-layout' );
+
+});

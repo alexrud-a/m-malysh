@@ -71,34 +71,14 @@
               </div>
             </b-row>
           </b-container>
-          <b-container class="p-0" v-if="products.length > 0">
+          <b-container class="p-0 mb-5" v-if="products.length > 0">
             <b-row>
               <b-col md="4"
                      sm="6"
                      v-for="product in filtered"
                      :key="product.id"
               >
-                <div class="product">
-                  <router-link :to="{name: 'Product', params: {slug: product.slug}}">
-                    <b-img v-if="product.images.length > 0"
-                           :src="product.images[0].src"
-                           :alt="product.images[0].alt"
-                    />
-                    <b-img v-else
-                           src="/wp-content/plugins/woocommerce/assets/images/placeholder.png"
-                    />
-                    <b-badge v-if="product.on_sale" variant="danger">
-                      Акция
-                    </b-badge>
-                  </router-link>
-                  <div v-if="product.sku.length">
-                    Код товара: {{ product.sku }}
-                  </div>
-                  <router-link :to="{name: 'Product', params: {slug: product.slug}}">
-                    {{ product.name }}
-                  </router-link>
-                  <div v-html="product.price_html"></div>
-                </div>
+                <ProductCard :product="product"/>
               </b-col>
             </b-row>
           </b-container>
@@ -113,13 +93,14 @@
 
 <script>
 import axios from "axios";
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters} from 'vuex';
 import {contains, containsAttributes} from "@/utils";
 import ProductFilter from "@/components/shop/ProductFilter";
+import ProductCard from "@/components/shop/ProductCard";
 
 export default {
   name: "Shop",
-  components: {ProductFilter},
+  components: {ProductFilter, ProductCard},
   data() {
     return {
       title: '',
