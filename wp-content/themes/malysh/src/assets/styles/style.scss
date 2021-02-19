@@ -751,3 +751,49 @@ h1, h2, h3, h4, h5, h6 {
     }
   }
 }
+
+.product {
+  &__slider {
+    &-main {
+      margin-bottom: 30px;
+
+      &-item {
+        align-items: center;
+        box-sizing: border-box;
+        color: #fff;
+        display: flex;
+        height: 450px;
+        justify-content: center;
+      }
+    }
+
+    &-thumb {
+      margin: 0 -5px;
+      width: calc(100% + 10px);
+
+      &-item {
+        cursor: pointer;
+        height: 100px;
+        padding: 0 5px;
+        transition: opacity 0.3s;
+
+        &:hover {
+          opacity: 0.75;
+        }
+
+        img {
+          height: 100%;
+          -o-object-fit: cover;
+          object-fit: cover;
+          -o-object-position: center;
+          object-position: center;
+          width: 100%;
+        }
+      }
+    }
+
+    img {
+      width: 100%;
+    }
+  }
+}

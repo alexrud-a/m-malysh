@@ -16,27 +16,25 @@
           Результаты по запросу: «{{ this.$route.query.search }}»
         </h1>
       </b-col>
-      <b-col sm="12"
+      <b-col sm="6"
+             md="4"
+             lg="3"
              v-for="item in content"
              :key="item.id"
       >
-        <b-card class="mb-2">
-          <b-card-text>
-            <router-link :to="item.url.replace('https://m-malysh.ru/', '')">
-              {{item.title}}
-            </router-link>
-          </b-card-text>
-        </b-card>
+        <ProductCard :product="item"/>
       </b-col>
     </b-row>
   </b-container>
 </template>
 
 <script>
-import axios from "axios";
+import {WooCommerce} from '../../consts';
+import ProductCard from "@/components/shop/ProductCard";
 
 export default {
   name: "Search",
+  components: {ProductCard},
   data() {
     return {
       content: [],
@@ -44,21 +42,17 @@ export default {
   },
   methods: {
     searching() {
-      return axios('https://m-malysh.ru/wp-json/wp/v2/search', {
-        method: "GET",
+      WooCommerce.get('products', {
         search: this.$route.query.search,
-        type: 'post',
-        subtype: 'product'
       })
           .then((response) => {
-            console.log(response);
             this.content = response.data;
           })
           .catch((error) => {
             console.log(error);
             return error;
-          })
-    }
+          });
+    },
   },
   watch: {
     $route(to, from) {
