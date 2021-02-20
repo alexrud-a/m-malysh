@@ -745,7 +745,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0;
     border: none;
 
-    &:hover, &:focus {
+    &:hover, &:focus, &:active {
       box-shadow: none;
       background-color: transparent;
     }
@@ -753,7 +753,6 @@ h1, h2, h3, h4, h5, h6 {
     &--add {
       svg {
         fill: $blue;
-        stroke: $blue;
       }
     }
   }
