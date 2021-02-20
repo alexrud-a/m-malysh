@@ -49,10 +49,10 @@ export default {
     },
     SET_WISHLIST: (state, product) => {
         let temp;
-        if (state.wishlist.find(item => item.id = product.id) === undefined) {
+        if (state.wishlist.find(item => item.id === product.id) === undefined) {
             temp = state.wishlist.push(product);
         } else {
-            temp = state.wishlist.splice(state.wishlist.findIndex(item => item.id = product.id), 1);
+            temp = state.wishlist.splice(state.wishlist.findIndex(item => item.id === product.id), 1);
         }
         localStorage.setItem("m-wishlist", JSON.stringify(state.wishlist));
         return temp
