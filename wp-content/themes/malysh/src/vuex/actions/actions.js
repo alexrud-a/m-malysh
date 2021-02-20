@@ -78,5 +78,8 @@ export default {
     },
     CLEAR_CART({commit}) {
         commit('CLEAR')
-    }
+    },
+    CHANGE_WISHLIST({commit}, product) {
+        commit('SET_WISHLIST', product);
+    },
 }

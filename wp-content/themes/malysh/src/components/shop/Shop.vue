@@ -78,7 +78,7 @@
                      v-for="product in filtered"
                      :key="product.id"
               >
-                <ProductCard :product="product"/>
+                <ProductCard :product="product" @changeWishList="changeWishList(product)"/>
               </b-col>
             </b-row>
           </b-container>
@@ -172,8 +172,12 @@ export default {
       'GET_CATEGORIES',
       'GET_SUBCATEGORIES',
       'GET_SIZES',
-      'GET_HEIGHT'
+      'GET_HEIGHT',
+      'CHANGE_WISHLIST'
     ]),
+    changeWishList(product) {
+      this.CHANGE_WISHLIST(product);
+    },
     getContent() {
       return axios('https://m-malysh.ru/wp-json/wp/v2/pages/28', {
         method: "GET"

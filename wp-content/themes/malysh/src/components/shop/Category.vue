@@ -77,7 +77,7 @@
                      v-for="product in filtered"
                      :key="product.id"
               >
-                <ProductCard :product="product"/>
+                <ProductCard :product="product" @changeWishList="changeWishList(product)"/>
               </b-col>
             </b-row>
           </b-container>
@@ -169,8 +169,11 @@ export default {
       'GET_CATEGORIES',
       'GET_SUBCATEGORIES',
       'GET_SIZES',
-      'GET_HEIGHT'
+      'ADD_WISHLIST'
     ]),
+    changeWishList(product) {
+      this.ADD_WISHLIST(product);
+    },
     filteredProducts(filters, sort) {
       if (filters !== null) {
         this.filters = filters;

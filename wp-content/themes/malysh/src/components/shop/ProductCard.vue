@@ -22,18 +22,26 @@
     <router-link :to="{name: 'Product', params: {slug: product.slug}}"
                  class="product-card__title"
     >
-      {{ product.name }}
+      {{ product.name }} {{isWishList}}
     </router-link>
     <div class="product-card__price" v-html="product.price_html"></div>
-    <b-btn class="product-card__wishlist">
-      <svg width="15" height="15">
+    <b-btn class="product-card__wishlist"
+           :class="{'product-card__wishlist--add' : isWishList}"
+           @click="changeWishList"
+    >
+      <svg width="15" height="15" v-if="!isWishList">
         <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like"></use>
+      </svg>
+      <svg width="15" height="15" v-else>
+        <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like-add"></use>
       </svg>
     </b-btn>
   </div>
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   name: "ProductCard",
   props: {
@@ -42,6 +50,19 @@ export default {
       default() {
         return {}
       }
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'WISHLIST'
+    ]),
+    isWishList() {
+      return [...this.WISHLIST].find(item => item.id === this.product.id) !== undefined ? true : false;
+    }
+  },
+  methods: {
+    changeWishList() {
+      this.$emit('changeWishList', this.product);
     }
   }
 }

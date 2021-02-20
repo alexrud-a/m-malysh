@@ -1,12 +1,59 @@
 <template>
-  <div>
-
-  </div>
+  <b-container>
+    <b-row>
+      <b-col sm="12">
+        <b-breadcrumb>
+          <b-breadcrumb-item href="/">
+            Главная
+          </b-breadcrumb-item>
+          <b-breadcrumb-item active>
+            Избранное
+          </b-breadcrumb-item>
+        </b-breadcrumb>
+      </b-col>
+      <b-col sm="12">
+        <h1>
+          Товары, добавленные в избранное
+        </h1>
+      </b-col>
+      <b-col sm="6"
+             md="4"
+             lg="3"
+             v-for="item in wishlist_data"
+             :key="item.id"
+      >
+        <ProductCard :product="item" @changeWishlist="changeWishlist(item)"/>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
+import {mapActions, mapGetters} from 'vuex';
+
 export default {
-name: "Wishlist"
+  name: "Wishlist",
+  data() {
+    return {
+      wishlist_data: []
+    }
+  },
+  methods: {
+    ...mapActions([
+      'CHANGE_WISHLIST',
+    ]),
+    changeWishlist(item) {
+      this.CHANGE_WISHLIST(item);
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'WISHLIST'
+    ]),
+  },
+  mounted() {
+    this.wishlist_data = this.WISHLIST;
+  }
 }
 </script>
 

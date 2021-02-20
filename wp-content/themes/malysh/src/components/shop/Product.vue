@@ -63,10 +63,14 @@
         <div class="product__sizes">
           Размеры
         </div>
-        <b-btn class="btn-blue">
+        <b-btn class="btn-blue"
+               @click="addCart"
+        >
           В корзину
         </b-btn>
-        <b-btn class="btn-blue">
+        <b-btn class="btn-blue"
+               @click="changeWishlist(product)"
+        >
           В избранное
         </b-btn>
         <b-link>
@@ -94,7 +98,7 @@
       <b-col md="3" sm="6"
              v-for="feature in featured"
              :key="feature.id">
-        <ProductCard :product="feature"/>
+        <ProductCard :product="feature" @changeWishlist="changeWishlist(feature)"/>
       </b-col>
     </b-row>
   </b-container>
@@ -151,14 +155,19 @@ export default {
   methods: {
     ...mapActions([
       'ADD_CART',
+      'CHANGE_WISHLIST',
       'GET_PRODUCTS',
     ]),
     addCart() {
+      //добавить variation_id для вариации
       this.ADD_CART(this.product);
+    },
+    changeWishlist(product) {
+      this.CHANGE_WISHLIST(product);
     },
     showCurrentSlide (event) {
       this.activeSlide = event.nextSlide;
-    }
+    },
   },
   computed: {
     ...mapGetters([

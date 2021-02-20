@@ -33,7 +33,7 @@
           <a :href="'tel:'+contacts.phone"
              class="header__phone-link"
           >
-            {{contacts.phone}}
+            {{ contacts.phone }}
           </a>
         </b-col>
         <b-col md="4" class="text-center">
@@ -43,7 +43,7 @@
             />
           </router-link>
           <p class="header__desc mb-0">
-            {{siteInfo.desc}}
+            {{ siteInfo.desc }}
           </p>
         </b-col>
         <b-col md="4"
@@ -66,19 +66,24 @@
               </b-button>
             </b-form-row>
           </b-form>
-          <router-link :to="{name: 'Wishlist'}"
-             class="header__wishlist"
+          <router-link :to="{name: 'Wishlist', params: {wishlist_data: WISHLIST}}"
+                       class="header__wishlist"
           >
             <svg width="25" height="25">
               <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like"/>
             </svg>
+            <span class="header__cart-count">
+              {{ WISHLIST.length }}
+            </span>
           </router-link>
-          <router-link :to="{name: 'Cart'}"
-             class="header__cart"
-          >
+          <router-link class="header__cart"
+                       :to="{name: 'Cart', params: {cart_data: CART}}">
             <svg width="25" height="25">
               <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#shopping-bag"/>
             </svg>
+            <span class="header__cart-count" v-if="CART.length">
+              {{ CART.reduce((s, i) => s = s + i.quantity, 0) }}
+            </span>
           </router-link>
         </b-col>
       </b-row>
@@ -93,7 +98,7 @@
               :to="link.url"
               class="nav-link"
           >
-            {{link.title}}
+            {{ link.title }}
           </router-link>
         </li>
       </b-nav>
@@ -102,6 +107,7 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
 import axios from 'axios';
 
 export default {
@@ -113,6 +119,12 @@ export default {
       contacts: [],
       searchVal: ''
     }
+  },
+  computed: {
+    ...mapGetters([
+      'CART',
+      'WISHLIST'
+    ]),
   },
   methods: {
     getMenu() {
@@ -141,7 +153,7 @@ export default {
     },
     searching() {
       this.$router
-          .push({name: 'Search' , query: {search: this.searchVal}})
+          .push({name: 'Search', query: {search: this.searchVal}})
           .catch(() => null);
       this.searchVal = '';
     }

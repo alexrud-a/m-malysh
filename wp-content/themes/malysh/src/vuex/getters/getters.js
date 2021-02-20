@@ -17,4 +17,7 @@ export default {
     CART(state) {
         return state.cart;
     },
+    WISHLIST(state) {
+        return state.wishlist;
+    },
 }
