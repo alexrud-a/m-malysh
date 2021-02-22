@@ -64,6 +64,19 @@ export default {
                 return error;
             });
     },
+    GET_COLORS({commit}) {
+        return WooCommerce.get("products/attributes/4/terms", {
+            hide_empty: true
+        })
+            .then((response) => {
+                commit('SET_COLORS', response.data);
+                return response;
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+                return error;
+            });
+    },
     ADD_CART({commit}, product) {
         commit('SET_CART', product);
     },

@@ -169,10 +169,11 @@ export default {
       'GET_CATEGORIES',
       'GET_SUBCATEGORIES',
       'GET_SIZES',
-      'ADD_WISHLIST'
+      'GET_HEIGHT',
+      'CHANGE_WISHLIST'
     ]),
     changeWishList(product) {
-      this.ADD_WISHLIST(product);
+      this.CHANGE_WISHLIST(product);
     },
     filteredProducts(filters, sort) {
       if (filters !== null) {

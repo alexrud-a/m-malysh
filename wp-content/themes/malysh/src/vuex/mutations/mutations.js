@@ -14,12 +14,24 @@ export default {
     SET_HEIGHT: (state, height) => {
         state.height = height;
     },
+    SET_COLORS: (state, colors) => {
+        state.colors = colors;
+    },
     SET_CART: (state, product) => {
         let isProduct = false;
         state.cart.map(function (item) {
             if (item.id === product.id) {
-                isProduct = true;
-                item.quantity++
+                if (item.variations.length) {
+                    if (item.variation_id === product.variation_id) {
+                        isProduct = true;
+                        item.quantity++
+                    } else {
+                        isProduct = false;
+                    }
+                } else {
+                    isProduct = true;
+                    item.quantity++
+                }
             }
         });
         let temp = isProduct || state.cart.push({ ...product, quantity: 1 });

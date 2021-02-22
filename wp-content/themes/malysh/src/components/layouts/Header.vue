@@ -68,13 +68,14 @@
           </b-form>
           <router-link :to="{name: 'Wishlist', params: {wishlist_data: WISHLIST}}"
                        class="header__wishlist"
+                       :class="{'header__wishlist--add' : WISHLIST.length}"
           >
-            <svg width="25" height="25">
+            <svg width="25" height="25" v-if="WISHLIST.length">
+              <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like-add"/>
+            </svg>
+            <svg width="25" height="25" v-else>
               <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like"/>
             </svg>
-            <span class="header__cart-count">
-              {{ WISHLIST.length }}
-            </span>
           </router-link>
           <router-link class="header__cart"
                        :to="{name: 'Cart', params: {cart_data: CART}}">

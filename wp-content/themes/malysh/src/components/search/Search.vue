@@ -22,13 +22,14 @@
              v-for="item in content"
              :key="item.id"
       >
-        <ProductCard :product="item"/>
+        <ProductCard :product="item" @changeWishList="changeWishList(item)"/>
       </b-col>
     </b-row>
   </b-container>
 </template>
 
 <script>
+import {mapActions} from 'vuex';
 import {WooCommerce} from '../../consts';
 import ProductCard from "@/components/shop/ProductCard";
 
@@ -41,6 +42,12 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'CHANGE_WISHLIST'
+    ]),
+    changeWishList(product) {
+      this.CHANGE_WISHLIST(product);
+    },
     searching() {
       WooCommerce.get('products', {
         search: this.$route.query.search,
