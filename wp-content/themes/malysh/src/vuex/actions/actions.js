@@ -2,7 +2,9 @@ import {WooCommerce} from '../../consts';
 
 export default {
     GET_PRODUCTS({commit}) {
-        return WooCommerce.get('products')
+        return WooCommerce.get('products', {
+            status: 'publish'
+        })
             .then((response) => {
                 commit('SET_PRODUCTS', response.data);
                 return response;
@@ -57,19 +59,6 @@ export default {
         })
             .then((response) => {
                 commit('SET_HEIGHT', response.data);
-                return response;
-            })
-            .catch((error) => {
-                console.log(error.response.data);
-                return error;
-            });
-    },
-    GET_COLORS({commit}) {
-        return WooCommerce.get("products/attributes/4/terms", {
-            hide_empty: true
-        })
-            .then((response) => {
-                commit('SET_COLORS', response.data);
                 return response;
             })
             .catch((error) => {

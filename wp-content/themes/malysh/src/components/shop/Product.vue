@@ -17,7 +17,7 @@
           </b-breadcrumb-item>
         </b-breadcrumb>
       </b-col>
-      <b-col lg="7" md="12">
+      <b-col xl="7" lg="6" md="12">
         <div class="product__slider" v-if="product.images.length">
           <VueAgile ref="main"
                     :options="options1"
@@ -65,7 +65,7 @@
           <img src="/wp-content/plugins/woocommerce/assets/images/placeholder.png" class="img-fluid"/>
         </div>
       </b-col>
-      <b-col lg="5" md="12">
+      <b-col xl="5" lg="6" md="12">
         <h1 class="mt-5">
           {{ product.name }}
         </h1>
@@ -73,9 +73,9 @@
           <span class="product__price" v-if="currentVariation && currentVariation.price">{{ currentVariation.price }} ₽</span>
           <span class="product__price" v-else v-html="product.price_html"></span>
           <span class="sup"> | </span>
-          <span class="product__">В наличии</span>
+          <span :class="product.stock_quantity === 'instock' ? 'color-l-gray' : ''">В наличии</span>
           <span class="sup"> | </span>
-          <span>На заказ</span>
+          <span :class="product.stock_quantity !== 'instock' ? 'color-l-gray' : ''">На заказ</span>
         </div>
         <b-form class="filter" v-if="product.attributes">
           <b-form-group v-for="attribute in product.attributes"
@@ -90,6 +90,7 @@
                 v-model="variationsOption[attribute.id]"
                 stacked
             >
+              <TableSize v-if="attribute.id === 2"/>
               <b-form-radio
                   v-for="(option, i) in attribute.options"
                   :key="i"
@@ -117,27 +118,13 @@
             <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like"/>
           </svg>
           В избранное
-        </b-btn>
-        <b-link v-b-modal.order-modal class="d-block mt-4 mb-4">
+        </b-btn><br/>
+        <b-link v-b-modal.order-modal class="product__link-order">
           Заказать в один клик
         </b-link>
         <hr/>
         <b-modal id="order-modal" centered hide-footer title="Купить в 1 клик">
-          <b-container>
-            <b-form @submit.prevent="order">
-              <b-form-group>
-                <b-input type="text" placeholder="Имя" v-model="form.name"/>
-              </b-form-group>
-              <b-form-group>
-                <b-input type="tel" placeholder="Телефон" v-model="form.tel"/>
-              </b-form-group>
-              <b-form-group>
-                <b-btn class="btn-blue">
-                  Купить
-                </b-btn>
-              </b-form-group>
-            </b-form>
-          </b-container>
+          <Order1Click :form="form" @order="order"/>
         </b-modal>
         <div class="tabs-collapse mb-4">
           <b-link v-b-toggle.short_description class="tabs-collapse__link">
@@ -149,7 +136,7 @@
             </svg>
           </b-link>
           <b-collapse id="short_description" class="pt-4">
-            <div v-html="product.short_description"></div>
+            <div v-html="product.short_description" class="color-gray"></div>
           </b-collapse>
         </div>
 
@@ -163,7 +150,7 @@
             </svg>
           </b-link>
           <b-collapse id="description" class="pt-4">
-            <div v-html="product.description"></div>
+            <div v-html="product.description" class="color-gray"></div>
           </b-collapse>
         </div>
       </b-col>
@@ -188,10 +175,13 @@ import {WooCommerce} from "@/consts";
 import {mapActions, mapGetters} from "vuex";
 import ProductCard from "@/components/shop/ProductCard";
 import {VueAgile} from 'vue-agile';
+import Order1Click from "@/components/forms/Order1Click";
+import TableSize from "@/components/modals/TableSize";
+
 
 export default {
   name: "Product",
-  components: {ProductCard, VueAgile},
+  components: {TableSize, Order1Click, ProductCard, VueAgile},
   data() {
     return {
       product: {},
@@ -308,8 +298,8 @@ export default {
     }
   },
   mounted() {
-    this.asNavFor1.push(this.$refs.thumbnails)
-    this.asNavFor2.push(this.$refs.main)
+    this.asNavFor1.push(this.$refs.thumbnails);
+    this.asNavFor2.push(this.$refs.main);
   },
   created() {
     this.GET_PRODUCTS()

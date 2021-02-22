@@ -36,7 +36,6 @@ let store = new Vuex.Store({
         subCategories: [],
         sizes: [],
         height: [],
-        colors: [],
         cart: cart_data,
         wishlist: wishlist_data,
     },

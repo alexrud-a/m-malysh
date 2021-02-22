@@ -152,6 +152,8 @@ export default {
       WooCommerce.get('products/categories', {
         per_page: 3,
         exclude: 16,
+        hide_empty: true,
+        parent: 0,
         orderby: 'count'
       })
           .then((response) => {

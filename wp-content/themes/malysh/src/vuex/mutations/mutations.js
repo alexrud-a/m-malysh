@@ -14,9 +14,6 @@ export default {
     SET_HEIGHT: (state, height) => {
         state.height = height;
     },
-    SET_COLORS: (state, colors) => {
-        state.colors = colors;
-    },
     SET_CART: (state, product) => {
         let isProduct = false;
         state.cart.map(function (item) {

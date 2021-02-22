@@ -14,9 +14,6 @@ export default {
     HEIGHT(state) {
         return state.height;
     },
-    COLORS(state) {
-        return state.colors;
-    },
     CART(state) {
         return state.cart;
     },

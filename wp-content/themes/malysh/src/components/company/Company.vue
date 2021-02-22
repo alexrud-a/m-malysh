@@ -27,7 +27,7 @@
 
 <script>
 import axios from "axios";
-import Form from "@/components/Form";
+import Form from "@/components/forms/Form";
 
 export default {
   name: "Company",

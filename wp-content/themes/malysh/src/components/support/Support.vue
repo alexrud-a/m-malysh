@@ -49,8 +49,8 @@
 
 <script>
 import axios from "axios";
-import Form from "@/components/Form";
-import FormRefund from "@/components/FormRefund";
+import Form from "@/components/forms/Form";
+import FormRefund from "@/components/forms/FormRefund";
 
 export default {
   name: "Support",
