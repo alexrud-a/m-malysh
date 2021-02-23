@@ -35,11 +35,6 @@ export default {
         localStorage.setItem("m-cart", JSON.stringify(state.cart));
         return temp
     },
-    REMOVE_CART: (state, index) => {
-        let temp = state.cart.splice(index, 1);
-        localStorage.setItem("m-cart", JSON.stringify(state.cart));
-        return temp
-    },
     INCREMENT: (state, index) => {
         let temp = state.cart[index].quantity++
         localStorage.setItem("m-cart", JSON.stringify(state.cart));
@@ -50,11 +45,16 @@ export default {
             let temp = state.cart[index].quantity--
             localStorage.setItem("m-cart", JSON.stringify(state.cart));
             return temp
+        } else {
+            let temp = state.cart.splice(index, 1);
+            localStorage.setItem("m-cart", JSON.stringify(state.cart));
+            return temp
         }
     },
     CLEAR: (state) => {
         state.cart = [];
         localStorage.setItem("m-cart", JSON.stringify(state.cart));
+        return state.cart;
     },
     SET_WISHLIST: (state, product) => {
         let temp;

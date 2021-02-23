@@ -96,7 +96,7 @@
             :key="ind"
         >
           <router-link
-              :to="link.url.replace('https://m-malysh.ru/', '')"
+              :to="link.url"
               class="nav-link"
           >
             {{ link.title }}

@@ -70,7 +70,7 @@
           {{ product.name }}
         </h1>
         <div class="product__variations">
-          <span class="product__price" v-if="currentVariation && currentVariation.price">{{ currentVariation.price }} ₽</span>
+          <span class="product__price" v-if="currentVariation && currentVariation.price">{{ currentVariation.price | formattedPrice }} ₽</span>
           <span class="product__price" v-else v-html="product.price_html"></span>
           <span class="sup"> | </span>
           <span :class="product.stock_quantity === 'instock' ? 'color-l-gray' : ''">В наличии</span>
@@ -177,7 +177,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import {VueAgile} from 'vue-agile';
 import Order1Click from "@/components/forms/Order1Click";
 import TableSize from "@/components/modals/TableSize";
-
+import {formattedPrice} from "@/utils";
 
 export default {
   name: "Product",
@@ -232,6 +232,9 @@ export default {
       }
     }
   },
+  filters: {
+    formattedPrice
+  },
   methods: {
     ...mapActions([
       'ADD_CART',
@@ -241,6 +244,7 @@ export default {
     addCart() {
       if (this.product.attributes.length) {
         this.product.variation_id = this.currentVariation.id;
+        this.product.current = this.currentVariation;
       }
       this.ADD_CART(this.product);
     },

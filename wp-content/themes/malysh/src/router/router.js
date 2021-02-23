@@ -11,6 +11,7 @@ import Wishlist from "@/components/shop/Wishlist";
 import Checkout from "@/components/shop/Checkout";
 import Search from "@/components/search/Search";
 import NotFound from "@/components/404/NotFound";
+import Cart from "@/components/shop/Cart";
 
 Vue.use(Router);
 
@@ -61,8 +62,8 @@ let router = new Router({
         },
         {
             path: '/cart',
-            name: 'Wishlist',
-            component: Wishlist
+            name: 'Cart',
+            component: Cart
         },
         {
             path: '/checkout',
