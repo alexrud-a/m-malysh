@@ -92,12 +92,14 @@
         </b-col>
       </template>
       <template v-else>
-        <h1>
-          Корзина товаров
-        </h1>
-        <p>
-          Ваша корзина пуста
-        </p>
+        <b-col sm="12">
+          <h1>
+            Корзина товаров
+          </h1>
+          <p>
+            Ваша корзина пуста
+          </p>
+        </b-col>
       </template>
     </b-row>
   </b-container>
