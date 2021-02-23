@@ -18,6 +18,7 @@ export default {
         return WooCommerce.get('products/categories', {
             orderby: 'name',
             hide_empty: true,
+            per_page: 30,
         })
             .then((response) => {
                 commit('SET_CATEGORIES', response.data);
@@ -29,7 +30,7 @@ export default {
             });
     },
     GET_SUBCATEGORIES({commit}) {
-        return WooCommerce.get("products/attributes/1/terms", {
+        return WooCommerce.get("products/attributes/5/terms", {
             hide_empty: true
         })
             .then((response) => {

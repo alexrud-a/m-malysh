@@ -94,7 +94,7 @@
 <script>
 import axios from "axios";
 import {mapActions, mapGetters} from 'vuex';
-import {contains, containsAttributes} from "@/utils";
+import {containsAttributes} from "@/utils";
 import ProductFilter from "@/components/shop/ProductFilter";
 import ProductCard from "@/components/shop/ProductCard";
 
@@ -199,13 +199,16 @@ export default {
       //выбираем все товары которые есть в выбранных категориях
       let filtersProducts = this.sourcedProducts.slice();
       if (this.filters.selected_categories.length) {
-        filtersProducts = filtersProducts.filter(product => contains(product.categories, this.filters.selected_categories, 'id'))
+        filtersProducts = filtersProducts.filter(product => {
+          let arrCat = product.categories.map(cat => cat.id);
+          return arrCat.filter(obj => this.filters.selected_categories.indexOf(obj) >= 0).length > 0
+        })
       }
       //Атрибут подкатегория
       if (this.filters.selected_subCategories.length) {
         filtersProducts = filtersProducts.filter((product) => {
           if (product.attributes.length > 0) {
-            let attrInd = product.attributes.findIndex((attribute) => attribute.id === 1)
+            let attrInd = product.attributes.findIndex((attribute) => attribute.id === 5)
             if (attrInd !== -1) {
               let res = containsAttributes(product.attributes[attrInd].options, this.filters.selected_subCategories);
               if (res) {

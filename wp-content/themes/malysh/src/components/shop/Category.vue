@@ -182,8 +182,18 @@ export default {
       this.isFilterActive = true;
       //выбираем все товары которые есть в выбранных категориях
       let filtersProducts = this.sourcedProducts.slice();
-      if (this.filters.selected_categories.length) {
-        filtersProducts = filtersProducts.filter(product => contains(product.categories, this.filters.selected_categories, 'id'))
+      if (this.filters.selected_subCategories.length) {
+        filtersProducts = filtersProducts.filter((product) => {
+          if (product.attributes.length > 0) {
+            let attrInd = product.attributes.findIndex((attribute) => attribute.id === 5)
+            if (attrInd !== -1) {
+              let res = containsAttributes(product.attributes[attrInd].options, this.filters.selected_subCategories);
+              if (res) {
+                return product;
+              }
+            }
+          }
+        });
       }
       //Атрибут подкатегория
       if (this.filters.selected_subCategories.length) {
