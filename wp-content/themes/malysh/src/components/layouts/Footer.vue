@@ -147,5 +147,64 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+.footer {
+  flex: 0 0 auto;
+  background-color: #e6e6e6;
+
+  &__top {
+    padding: 60px 0 40px;
+  }
+
+  .contacts {
+    margin: 20px 0;
+
+    &__item {
+      margin-bottom: 15px;
+
+      a, span {
+        display: flex;
+        align-items: center;
+        color: #303030;
+        text-decoration: none;
+
+        svg {
+          fill: #303030;
+          margin-right: 15px;
+        }
+
+        &:hover {
+          color: $blue;
+          text-decoration: none;
+
+          svg {
+            fill: $blue;
+          }
+        }
+      }
+    }
+  }
+
+  &__menu {
+    &-item {
+      padding: 0;
+
+      a {
+        color: #000;
+
+        &:hover,
+        .router-link-active {
+          color: #aaaaaa;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &__copyright {
+    background-color: #303030;
+    color: #fff;
+    padding: 10px 0;
+  }
+}
 </style>

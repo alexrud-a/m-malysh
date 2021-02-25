@@ -167,5 +167,123 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+.header {
+  flex: 0 0 auto;
+
+  &__top {
+    background-color: #303030;
+    color: #fff;
+    padding: 10px 0;
+    font-size: 12px;
+  }
+
+  &__city-link {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid #fff;
+
+    &:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+
+  &__slogan {
+    font-size: 16px;
+  }
+
+  &__phone-link {
+    font-size: 20px;
+    font-weight: $font-weight-bold;
+    color: #000;
+    text-decoration: none;
+
+    &:hover {
+      color: #000;
+      text-decoration: none;
+    }
+  }
+
+  &__desc {
+    color: #aaaaaa;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  &__search-form {
+    width: 220px;
+  }
+
+  &__search-form-btn {
+    position: absolute;
+    right: 0;
+    box-shadow: none !important;
+  }
+
+  &__menu {
+    text-align: center;
+
+    &-item {
+      a {
+        font-size: 18px;
+        color: #000;
+        position: relative;
+
+        &::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 13px;
+          height: 10px;
+          background-color: $blue;
+          border-radius: 2px;
+          transition: all .3s ease-in-out;
+          opacity: 0;
+          z-index: -1;
+        }
+
+        &:hover, &:focus, &:active,
+        .router-link-active {
+          color: #000;
+
+          &::after,
+          .router-link-active::after {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  &__cart {
+    text-decoration: none!important;
+    position: relative;
+    margin-right: 12px;
+
+    &-count {
+      position: absolute;
+      bottom: -12px;
+      right: -12px;
+      width: 23px;
+      height: 23px;
+      border-radius: 50%;
+      background: #0abab5;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+    }
+  }
+
+  &__wishlist {
+    &--add {
+      svg {
+        fill: $blue;
+      }
+    }
+  }
+}
 </style>
