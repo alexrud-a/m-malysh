@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container class="cart">
     <b-row>
       <b-col sm="12">
         <b-breadcrumb>
@@ -12,8 +12,8 @@
         </b-breadcrumb>
       </b-col>
       <template v-if="cart_data.length">
-        <b-col lg="8" md="12">
-          <h1>
+        <b-col xl="8" lg="6" md="12">
+          <h1 class="mb-4">
             Корзина товаров
           </h1>
         </b-col>
@@ -50,7 +50,7 @@
                  :key="product.id"
             >
               <div class="cart-products__td d-table-cell">
-                <img :src="product.images[0].src" :alt="product.images[0].alt"/>
+                <img :src="product.images[0].src" :alt="product.images[0].alt" width="120"/>
               </div>
               <div class="cart-products__td d-table-cell">
                 <div>
@@ -66,6 +66,9 @@
               <div class="cart-products__td d-table-cell">
                 <div class="cart-products__color"
                      :style="'background-color: '+product.current.attributes[3].option"></div>
+              </div>
+              <div class="cart-products__td d-table-cell">
+                {{ product.current.price | formattedPrice }} ₽
               </div>
               <div class="cart-products__td d-table-cell">
                 <span class="cart-item__qty-btn" @click="increment(index)">+</span>
@@ -86,50 +89,12 @@
               </div>
             </div>
           </div>
-        </b-col>
-        <b-col lg="4">
-          <b-card>
-            <b-form>
-              <b-form-row>
-                <b-input type="text"
-                         placeholder="Введите промокод"
-                         v-model="promo"
-                />
-                <b-btn type="submit" class="btn btn-blue">
-                  Применить
-                </b-btn>
-              </b-form-row>
-            </b-form>
-            <b-card-text>
-              <b-row class="justify-content-between">
-                <span>
-                  Количество товаров
-                </span>
-                <span>
-                  {{ CART.reduce((s, i) => s = s + i.quantity, 0) }}
-                </span>
-              </b-row>
-              <b-row class="justify-content-between">
-                <span>
-                  ИТОГО
-                </span>
-                <span>
-                  {{ cartTotal | formattedPrice }} ₽
-                </span>
-              </b-row>
-              <b-btn>
-                Оформить заказ
-              </b-btn>
-            </b-card-text>
-          </b-card>
-        </b-col>
-        <b-col sm="12">
           <h2>
             Доставка и оплата
           </h2>
-          <b-form @submit.prevent="order">
+          <b-form @submit.prevent="order" class="form-refund">
             <b-form-group>
-              <label>
+              <label class="label">
                 Выберите страну
               </label>
               <multiselect v-model="select_country" :options="countries"
@@ -142,21 +107,23 @@
               />
             </b-form-group>
             <b-form-group label="Способ доставки"
+                          label-class="label"
             >
               <b-form-radio-group
                   v-model="select_shipping"
                   stacked
               >
                 <b-form-radio
-                    v-for="shipping in shippings"
+                    v-for="shipping in custom_shippings"
                     :key="shipping.id"
-                    :value="shipping.id"
+                    :value="shipping"
                 >
                   {{ shipping.title }}
                 </b-form-radio>
               </b-form-radio-group>
             </b-form-group>
             <b-form-group label="Способ оплаты"
+                          label-class="label"
             >
               <b-form-radio-group
                   v-model="select_payment"
@@ -172,42 +139,86 @@
               </b-form-radio-group>
             </b-form-group>
             <b-form-group>
-              <label>
+              <label class="label mb-0">
                 Итого
               </label>
             </b-form-group>
-            <b-form-group>
-              Сумма заказа {{ cartTotal | formattedPrice }} ₽
+            <b-form-group class="custom-radio cart__total">
+              <b-form-row class="justify-content-between">
+                <span>
+                  Сумма заказа
+                </span>
+                <span>
+                  {{ cartTotal | formattedPrice }} ₽
+                </span>
+              </b-form-row>
+              <!--            <b-form-row class="justify-content-between">-->
+              <!--              <span>Доставка</span> <span>{{ shipping_total }} ₽</span>-->
+              <!--            </b-form-row>-->
+              <b-form-row class="justify-content-between">
+                <span>
+                  Общая стоимость
+                </span>
+                <span>
+                  {{ cartTotal | formattedPrice }} ₽
+                </span>
+              </b-form-row>
             </b-form-group>
-<!--            <b-form-group>-->
-<!--              Доставка {{ shipping_total }} ₽-->
-<!--            </b-form-group>-->
             <b-form-group>
-              Общая стоимость {{ cartTotal | formattedPrice }} ₽
-            </b-form-group>
-            <b-form-group>
-              <label>
+              <label class="label mt-4">
                 Оформление заказа
               </label>
               <b-form-row>
-                <b-input type="text" placeholder="Ваше имя" v-model="user.name"/>
-                <b-input type="text" placeholder="Ваша фамилия" v-model="user.last_name"/>
-                <b-input type="text" placeholder="Ваш email" v-model="user.email"/>
+                <b-col md="4">
+                  <b-form-group>
+                    <b-input type="text" placeholder="Ваше имя" v-model="user.name"/>
+                  </b-form-group>
+                </b-col>
+                <b-col md="4">
+                  <b-form-group>
+                    <b-input type="text" placeholder="Ваша фамилия" v-model="user.last_name"/>
+                  </b-form-group>
+                </b-col>
+                <b-col md="4">
+                  <b-form-group>
+                    <b-input type="text" placeholder="Ваш email" v-model="user.email"/>
+                  </b-form-group>
+                </b-col>
               </b-form-row>
               <b-form-row>
-                <b-input type="text" placeholder="Город" v-model="user.city"/>
-                <b-input type="text" placeholder="Улица" v-model="user.street"/>
+                <b-col md="4">
+                  <b-form-group>
+                    <b-input type="text" placeholder="Город" v-model="user.city"/>
+                  </b-form-group>
+                </b-col>
+                <b-col md="8">
+                  <b-form-group>
+                    <b-input type="text" placeholder="Улица" v-model="user.street"/>
+                  </b-form-group>
+                </b-col>
               </b-form-row>
               <b-form-row>
-                <b-input type="text" placeholder="Номер дома" v-model="user.house"/>
-                <b-input type="text" placeholder="Номер квартиры" v-model="user.flat"/>
-                <b-input type="text" placeholder="Телефон" v-model="user.tel"/>
+                <b-col md="4">
+                  <b-form-group>
+                    <b-input type="text" placeholder="Номер дома" v-model="user.house"/>
+                  </b-form-group>
+                </b-col>
+                <b-col md="4">
+                  <b-form-group>
+                    <b-input type="text" placeholder="Номер квартиры" v-model="user.flat"/>
+                  </b-form-group>
+                </b-col>
+                <b-col md="4">
+                  <b-form-group>
+                    <b-input type="text" placeholder="Телефон" v-model="user.tel"/>
+                  </b-form-group>
+                </b-col>
               </b-form-row>
-            </b-form-group>
-            <b-form-group>
-              <b-btn type="submit" class="btn btn-blue">
-                Оформить заказ
-              </b-btn>
+              <b-form-group>
+                <b-btn type="submit" class="btn btn-blue">
+                  Оформить заказ
+                </b-btn>
+              </b-form-group>
             </b-form-group>
           </b-form>
         </b-col>
@@ -240,9 +251,11 @@ export default {
       countries: [],
       select_country: {},
       shippings: [],
+      custom_shippings: [],
       select_shipping: {},
       payments: [],
       select_payment: {},
+      select_shipping_method: ['delivery', 'pickup'],
       user: {
         name: '',
         last_name: '',
@@ -269,7 +282,9 @@ export default {
 
       if (this.cart_data.length) {
         for (let item of this.cart_data) {
-          if (item.price) {
+          if (item.current.price) {
+            price = item.current.price
+          } else {
             price = item.price
           }
 
@@ -284,7 +299,7 @@ export default {
       } else {
         return 0
       }
-    }
+    },
   },
   methods: {
     ...mapActions([
@@ -339,8 +354,8 @@ export default {
         }),
         shipping_lines: [
           {
-            method_id: this.select_shipping,
-            method_title: '',
+            method_id: this.select_shipping.id,
+            method_title: this.select_shipping.title,
             total: '0'
           }
         ]
@@ -370,8 +385,14 @@ export default {
     getShipping() {
       WooCommerce.get("shipping_methods")
           .then((response) => {
-            this.shippings = response.data.filter(shipping => shipping.id === 'local_pickup' || shipping.id === 'rpaefw_post_calc');
-            this.select_shipping = this.shippings[0].id;
+            this.shippings = response.data.filter(shipping => shipping.id === 'cdek_shipping' || shipping.id === 'rpaefw_post_calc');
+            this.custom_shippings = this.shippings.map(shipping => {
+              shipping.id === 'cdek_shipping' ? shipping.title = 'Доставка курьерской службой CДЭК' : '';
+              shipping.id === 'rpaefw_post_calc' ? shipping.title = 'Почта России' : '';
+              return shipping;
+            });
+            this.custom_shippings = this.custom_shippings.sort((prev, next) => next.title - prev.title);
+            this.select_shipping = this.custom_shippings[0];
           })
           .catch((error) => {
             console.log(error.response.data);
@@ -386,7 +407,7 @@ export default {
           .catch((error) => {
             console.log(error.response.data);
           });
-    }
+    },
   },
   mounted() {
     this.cart_data = this.CART;
@@ -399,6 +420,111 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+.cart {
+  &-products {
+    width: 100%;
+    text-align: center;
+    margin: 40px 0;
 
+    &__row {
+
+      &--thead {
+        font-size: 16px;
+        font-weight: $font-weight-bold;
+
+        .cart-products__td {
+          border-bottom: 1px solid $l-gray;
+        }
+      }
+
+      &--tbody {
+        .cart-products__td {
+          border-bottom: 1px solid $l-gray;
+        }
+      }
+    }
+
+    &__td {
+      padding: 10px;
+      vertical-align: middle;
+    }
+
+    &__color {
+      width: 100%;
+      height: 20px;
+    }
+
+    .btn,
+    .btn:hover,
+    .btn:focus,
+    .btn:active {
+      background: none !important;
+      color: $gray !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    .cart-item {
+      &__qty-btn {
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .custom-radio {
+    border: 1px solid $blue;
+    padding: 15px;
+    margin-bottom: -1px;
+
+    .custom-control-label {
+      padding-left: 40px;
+      font-size: 18px;
+      font-weight: $font-weight-bold;
+      line-height: 40px;
+      width: 100%;
+
+      &::before {
+        border-radius: 50% !important;
+        border: 1px solid $blue;
+        width: 30px;
+        height: 30px;
+      }
+
+      &::after {
+        border-radius: 50% !important;
+        border: 10px solid $blue;
+        width: 30px;
+        height: 30px;
+        background-image: none !important;
+      }
+    }
+  }
+
+  &__total {
+    padding: 20px 30px !important;
+    font-weight: $font-weight-bold;
+    font-size: 18px;
+  }
+
+  .label {
+    text-transform: uppercase;
+    font-weight: $font-weight-light;
+    letter-spacing: 1px;
+    font-size: 16px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .multiselect {
+    &__tags {
+      border-radius: 0;
+      border-color: $blue;
+    }
+  }
+}
 </style>
