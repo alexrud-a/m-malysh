@@ -119,6 +119,9 @@
                     :value="shipping"
                 >
                   {{ shipping.title }}
+                  <span class="shipping-pay">
+                    {{ shipping.pay | formattedPrice }} ₽
+                  </span>
                 </b-form-radio>
               </b-form-radio-group>
             </b-form-group>
@@ -149,18 +152,21 @@
                   Сумма заказа
                 </span>
                 <span>
-                  {{ cartTotal | formattedPrice }} ₽
+                  {{ cartTotal() | formattedPrice }} ₽
                 </span>
               </b-form-row>
-              <!--            <b-form-row class="justify-content-between">-->
-              <!--              <span>Доставка</span> <span>{{ shipping_total }} ₽</span>-->
-              <!--            </b-form-row>-->
+              <b-form-row class="justify-content-between">
+                <span>Доставка</span>
+                <span>
+                  {{ select_shipping.pay | formattedPrice }} ₽
+                </span>
+              </b-form-row>
               <b-form-row class="justify-content-between">
                 <span>
                   Общая стоимость
                 </span>
                 <span>
-                  {{ cartTotal | formattedPrice }} ₽
+                  {{ cartTotal() + select_shipping.pay | formattedPrice }} ₽
                 </span>
               </b-form-row>
             </b-form-group>
@@ -214,6 +220,14 @@
                   </b-form-group>
                 </b-col>
               </b-form-row>
+              <b-form-row>
+                <b-col md="4">
+                  <b-form-group>
+                    <b-input type="text" placeholder="Индекс" v-model="user.postcode"
+                             @change="getTotalDelivery"/>
+                  </b-form-group>
+                </b-col>
+              </b-form-row>
               <b-form-group>
                 <b-btn type="submit" class="btn btn-blue">
                   Оформить заказ
@@ -239,9 +253,10 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import {WooCommerce} from "@/consts";
+import {tokenDadata, WooCommerce} from "@/consts";
 import {formattedPrice} from "@/utils";
 import Multiselect from 'vue-multiselect';
+import axios from "axios";
 
 export default {
   name: "Cart",
@@ -265,7 +280,9 @@ export default {
         street: '',
         house: '',
         flat: '',
-      }
+        postcode: '',
+      },
+      codeToCdek: '',
     }
   },
   components: {Multiselect},
@@ -274,7 +291,15 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'CART'
+      'CART',
+      'USER_CITY'
+    ]),
+  },
+  methods: {
+    ...mapActions([
+      'CLEAR_CART',
+      'INCREMENT_CART_ITEM',
+      'DECREMENT_CART_ITEM',
     ]),
     cartTotal() {
       let result = [];
@@ -300,13 +325,30 @@ export default {
         return 0
       }
     },
-  },
-  methods: {
-    ...mapActions([
-      'CLEAR_CART',
-      'INCREMENT_CART_ITEM',
-      'DECREMENT_CART_ITEM',
-    ]),
+    itemsWeight() {
+      let weight;
+      let result = [];
+
+      if (this.cart_data.length) {
+        for (let item of this.cart_data) {
+          if (item.current.weight) {
+            weight = item.current.weight
+          } else {
+            weight = item.weight
+          }
+
+          result.push(weight * item.quantity)
+        }
+
+        result = result.reduce(function (sum, el) {
+          return sum + el;
+        });
+
+        return result
+      } else {
+        return 0
+      }
+    },
     clearCart() {
       this.CLEAR_CART();
       this.cart_data = this.CART;
@@ -316,6 +358,54 @@ export default {
     },
     decrement(index) {
       this.DECREMENT_CART_ITEM(index);
+    },
+    getCodeForCdek() {
+      return axios('https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/delivery', {
+        method: "POST",
+        mode: "cors",
+        data: {
+          "query": this.USER_CITY.city_kladr_id,
+        },
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          "Accept": "application/json;charset=UTF-8",
+          "Authorization": "Token " + tokenDadata
+        },
+      })
+          .then((response) => {
+            console.log(response);
+            this.codeToCdek = response.data.suggestions[0].data.cdek_id;
+            this.getTotalDelivery();
+            return response
+          })
+          .catch((error) => {
+            console.log(error)
+            return error;
+          });
+    },
+    getTotalDelivery() {
+      return axios('https://m-malysh.ru/myajax.php', {
+        method: 'POST',
+        data: {
+          "sumoc": this.cartTotal(),
+          "from": 394042,
+          "to": this.user.postcode.length ? this.user.postcode : this.USER_CITY.postal_code,
+          "to_cdek": this.codeToCdek,
+          "weight": this.itemsWeight(), //вес в граммах
+        }
+      })
+          .then(response => {
+            this.custom_shippings = this.shippings.map(shipping => {
+              shipping.id === 'cdek_shipping' ? shipping.pay = 0 : '';
+              shipping.id === 'rpaefw_post_calc' ? shipping.pay = response.data.russianPost.paynds / 100 : '';
+              return shipping;
+            });
+            return response;
+          })
+          .catch(error => {
+            console.log(error);
+            return error;
+          })
     },
     order() {
       //проверить тип оплаты если наличкой отправляем заказ, если картой отправляем на оплату, после получения статуса оплаты отправляем заказ
@@ -329,7 +419,7 @@ export default {
           address_1: this.user.street + ', ' + this.user.house + ', ' + this.user.flat,
           city: this.user.city,
           state: "",
-          postcode: "",
+          postcode: this.user.postcode,
           country: this.select_country.code,
           email: this.user.email,
           phone: this.user.tel
@@ -341,7 +431,7 @@ export default {
           address_2: "",
           city: this.user.city,
           state: "",
-          postcode: "",
+          postcode: this.user.postcode,
           country: this.select_country.code,
         },
         line_items: this.cart_data.map(product => {
@@ -356,7 +446,7 @@ export default {
           {
             method_id: this.select_shipping.id,
             method_title: this.select_shipping.title,
-            total: '0'
+            total: this.select_shipping.pay
           }
         ]
       };
@@ -391,8 +481,9 @@ export default {
               shipping.id === 'rpaefw_post_calc' ? shipping.title = 'Почта России' : '';
               return shipping;
             });
-            this.custom_shippings = this.custom_shippings.sort((prev, next) => next.title - prev.title);
+            this.custom_shippings = this.custom_shippings.sort((prev, next) => prev.title - next.title);
             this.select_shipping = this.custom_shippings[0];
+            this.getCodeForCdek();
           })
           .catch((error) => {
             console.log(error.response.data);
@@ -411,6 +502,11 @@ export default {
   },
   mounted() {
     this.cart_data = this.CART;
+  },
+  watch: {
+    USER_CITY: function () {
+      this.getCodeForCdek();
+    }
   },
   created() {
     this.getCountries();

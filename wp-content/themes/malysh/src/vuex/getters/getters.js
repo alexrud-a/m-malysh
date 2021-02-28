@@ -20,4 +20,7 @@ export default {
     WISHLIST(state) {
         return state.wishlist;
     },
+    USER_CITY(state) {
+        return state.userCity;
+    }
 }

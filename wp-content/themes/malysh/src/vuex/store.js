@@ -38,6 +38,7 @@ let store = new Vuex.Store({
         height: [],
         cart: cart_data,
         wishlist: wishlist_data,
+        userCity: ''
     },
     mutations,
     actions,

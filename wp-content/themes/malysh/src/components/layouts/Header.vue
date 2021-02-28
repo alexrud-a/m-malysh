@@ -10,9 +10,24 @@
           >
             <a href="#"
                class="header__city-link"
+               @click.prevent="$bvToast.show('city-toast')"
             >
-              г. Воронеж
+              {{ USER_CITY.city_with_type }}
             </a>
+            <b-toast id="city-toast" title="Ваш город">
+              <b-form @submit.prevent="changeCity">
+                <b-form-row>
+                  <b-col sm="8">
+                    <b-input type="text" v-model="city"/>
+                  </b-col>
+                  <b-col sm="4">
+                    <b-btn type="submit" class="btn btn-blue" @click="$bvToast.hide('city-toast')">
+                      ОК
+                    </b-btn>
+                  </b-col>
+                </b-form-row>
+              </b-form>
+            </b-toast>
           </b-col>
           <b-col md="4"
                  class="text-right"
@@ -108,7 +123,7 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import axios from 'axios';
 
 export default {
@@ -118,16 +133,26 @@ export default {
       siteInfo: '',
       menu: [],
       contacts: [],
-      searchVal: ''
+      searchVal: '',
+      city: '',
     }
   },
   computed: {
     ...mapGetters([
       'CART',
-      'WISHLIST'
+      'WISHLIST',
+      'USER_CITY',
     ]),
   },
   methods: {
+    ...mapActions([
+        'GET_CITY_USER',
+        'CHANGE_CITY'
+    ]),
+    changeCity() {
+      this.CHANGE_CITY(this.city);
+      this.city = '';
+    },
     getMenu() {
       return axios('https://m-malysh.ru/wp-json/wp-api-menus/v2/menus/2', {
         method: "GET"
@@ -163,6 +188,7 @@ export default {
     this.siteInfo = window.siteInfo;
     this.getMenu();
     this.getContacts();
+    this.GET_CITY_USER();
   }
 }
 </script>
@@ -258,7 +284,7 @@ export default {
   }
 
   &__cart {
-    text-decoration: none!important;
+    text-decoration: none !important;
     position: relative;
     margin-right: 12px;
 
@@ -286,4 +312,5 @@ export default {
     }
   }
 }
+
 </style>

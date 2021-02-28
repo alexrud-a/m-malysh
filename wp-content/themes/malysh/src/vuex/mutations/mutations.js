@@ -1,4 +1,8 @@
 export default {
+    SET_USER_CITY: (state, city) => {
+        console.log(city);
+        state.userCity = city;
+    },
     SET_PRODUCTS: (state, products) => {
         state.products = products;
     },

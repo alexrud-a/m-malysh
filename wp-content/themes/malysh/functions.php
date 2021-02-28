@@ -199,3 +199,14 @@ function disable_wp_emojis_in_tinymce( $plugins ) {
         return array();
     }
 }
+
+//add_action( 'wp_ajax_delivery', 'delivery_function' ); // wp_ajax_{ЗНАЧЕНИЕ ПАРАМЕТРА ACTION!!}
+//add_action( 'wp_ajax_nopriv_delivery', 'delivery_function' );  // wp_ajax_nopriv_{ЗНАЧЕНИЕ ACTION!!}
+//// первый хук для авторизованных, второй для не авторизованных пользователей
+//
+//function delivery_function(){
+//
+//    echo 'HELLO';
+//
+//    die; // даём понять, что обработчик закончил выполнение
+//}
