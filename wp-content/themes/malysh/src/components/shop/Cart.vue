@@ -257,6 +257,7 @@ import {tokenDadata, WooCommerce} from "@/consts";
 import {formattedPrice} from "@/utils";
 import Multiselect from 'vue-multiselect';
 import axios from "axios";
+import qs from "qs";
 
 export default {
   name: "Cart",
@@ -384,23 +385,27 @@ export default {
           });
     },
     getTotalDelivery() {
-      return axios('https://m-malysh.ru/myajax.php', {
+      return axios('/wp-admin/admin-ajax.php', {
         method: 'POST',
-        data: {
-          "sumoc": this.cartTotal(),
-          "from": 394042,
-          "to": this.user.postcode.length ? this.user.postcode : this.USER_CITY.postal_code,
-          "to_cdek": this.codeToCdek,
-          "weight": this.itemsWeight(), //вес в граммах
-        }
+        data: qs.stringify({
+          action: 'delivery',
+          data: {
+            "sumoc": this.cartTotal(),
+            "from": 394042,
+            "to": this.user.postcode.length ? this.user.postcode : this.USER_CITY.postal_code,
+            "to_cdek": this.codeToCdek,
+            "weight": this.itemsWeight(), //вес в граммах
+          }
+        })
       })
           .then(response => {
+            let res = qs.parse(response.data);
             this.custom_shippings = this.shippings.map(shipping => {
-              shipping.id === 'cdek_shipping' ? shipping.pay = 0 : '';
-              shipping.id === 'rpaefw_post_calc' ? shipping.pay = response.data.russianPost.paynds / 100 : '';
+              shipping.id === 'cdek_shipping' ? shipping.pay = res.cdek.total_sum : '';
+              shipping.id === 'rpaefw_post_calc' ? shipping.pay = res.russianPost.paynds / 100 : '';
               return shipping;
             });
-            return response;
+            return res;
           })
           .catch(error => {
             console.log(error);

@@ -1,5 +1,5 @@
 <template>
-  <b-form @submit="onSubmit" class="form contact-form">
+  <b-form @submit.prevent="onSubmit" class="form contact-form">
     <h3>
       Связаться с нами
     </h3>
@@ -33,6 +33,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import qs from "qs";
+
 export default {
   name: "Form",
   data() {
@@ -46,13 +49,26 @@ export default {
     }
   },
   methods: {
-    onSubmit(event) {
-      event.preventDefault();
-      alert(JSON.stringify(this.form));
-      this.onReset();
+    onSubmit() {
+      return axios('/wp-admin/admin-ajax.php', {
+        method: 'POST',
+        data: qs.stringify({
+          action: 'form',
+          form: this.form
+        })
+      })
+      .then(response => {
+        let res = qs.parse(response.data);
+        console.log(res);
+        this.onReset();
+        return res;
+      })
+      .catch(error => {
+        console.log(error);
+        return error;
+      })
     },
-    onReset(event) {
-      event.preventDefault();
+    onReset() {
       this.form = {
         name: '',
         tel: '',

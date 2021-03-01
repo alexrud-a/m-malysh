@@ -1,5 +1,5 @@
 <template>
-  <b-form class="form-refund" @submit="onSubmit">
+  <b-form class="form-refund" @submit.prevent="onSubmit">
     <h3 class="form-refund__title">
       Пожалуйста, заполните форму для возврата товара
     </h3>
@@ -85,6 +85,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import qs from "qs";
+
 export default {
   name: "FormRefund",
   data() {
@@ -103,13 +106,26 @@ export default {
     }
   },
   methods: {
-    onSubmit(event) {
-      event.preventDefault();
-      alert(JSON.stringify(this.formRefund));
-      this.onReset();
+    onSubmit() {
+      return axios('/wp-admin/admin-ajax.php', {
+        method: 'POST',
+        data: qs.stringify({
+          action: 'formRefund',
+          form: this.formRefund
+        })
+      })
+          .then(response => {
+            let res = qs.parse(response.data);
+            console.log(res);
+            this.onReset();
+            return res;
+          })
+          .catch(error => {
+            console.log(error);
+            return error;
+          })
     },
-    onReset(event) {
-      event.preventDefault();
+    onReset() {
       this.formRefund = {
         name: '',
         lastName: '',
