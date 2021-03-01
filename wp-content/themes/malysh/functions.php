@@ -233,9 +233,10 @@ function form_function()
         $headers = "Content-type: text/html; charset=utf-8";
         $headers .= "From: no-reply@mail.ru";
         $subject = "Сообщение с сайта " . $_SERVER['SERVER_NAME'];
-        $message .= "Имя: " . $_POST['form']['name'];
-        $message .= "<br/>E-mail: " . $_POST['form']['email'];
-        $message .= "<br/>Телефон:<br/>" . $_POST['form']['tel'];
+        $message .= "<h1>Форма связи</h1>";
+        $message .= "<p>Имя: " . $_POST['form']['name'] . "</p>";
+        $message .= "<p>E-mail: " . $_POST['form']['email'] . "</p>";
+        $message .= "<p>Телефон:" . $_POST['form']['tel'] . "</p>";
 
         if (wp_mail($to, $subject, $message, $headers)) {
             $rtr = 'Cпасибо! Ваше сообщение отправлено!';
@@ -273,15 +274,16 @@ function formRefund_function()
         $headers = "Content-type: text/html; charset=utf-8";
         $headers .= "From: no-reply@mail.ru";
         $subject = "Заявка на возврат " . $_SERVER['SERVER_NAME'];
-        $message .= "Имя: " . $_POST['formRefund']['name'];
-        $message .= "<br/>Фамилия: " . $_POST['formRefund']['lastName'];
-        $message .= "<br/>E-mail: " . $_POST['formRefund']['email'];
-        $message .= "<br/>Телефон:<br/>" . $_POST['formRefund']['tel'];
-        $message .= "<br/>Номер заказа:<br/>" . $_POST['formRefund']['orderId'];
-        $message .= "<br/>Дата заказа:<br/>" . $_POST['formRefund']['date'];
-        $message .= "<br/>Наименование товара:<br/>" . $_POST['formRefund']['productName'];
-        $message .= "<br/>Артикул товара:<br/>" . $_POST['formRefund']['productId'];
-        $message .= "<br/>Причина возврата:<br/>" . $_POST['formRefund']['comment'];
+        $message .= "<h1>Возврат товара</h1>";
+        $message .= "<p>Имя: " . $_POST['formRefund']['name'] . "</p>";
+        $message .= "<p>Фамилия: " . $_POST['formRefund']['lastName'] . "</p>";
+        $message .= "<p>E-mail: " . $_POST['formRefund']['email'] . "</p>";
+        $message .= "<p>Телефон:" . $_POST['formRefund']['tel'] . "</p>";
+        $message .= "<p>Номер заказа:" . $_POST['formRefund']['orderId'] . "</p>";
+        $message .= "<p>Дата заказа:" . $_POST['formRefund']['date'] . "</p>";
+        $message .= "<p>Наименование товара:" . $_POST['formRefund']['productName'] . "</p>";
+        $message .= "<p>Артикул товара:" . $_POST['formRefund']['productId'] . "</p>";
+        $message .= "<p>Причина возврата:" . $_POST['formRefund']['comment'] . "</p>";
 
         if (wp_mail($to, $subject, $message, $headers)) {
             $rtr = 'Ваша заявка на возврат принята!';
