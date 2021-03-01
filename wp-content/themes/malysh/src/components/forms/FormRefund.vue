@@ -111,7 +111,7 @@ export default {
         method: 'POST',
         data: qs.stringify({
           action: 'formRefund',
-          form: this.formRefund
+          formRefund: this.formRefund
         })
       })
           .then(response => {

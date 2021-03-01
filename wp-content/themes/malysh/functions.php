@@ -259,18 +259,32 @@ function formRefund_function()
 
     $data = json_decode(file_get_contents('php://input'), true);
 
-    if (!empty($_POST['form']['name']) && !empty($_POST['form']['tel']) && !empty($_POST['form']['email'])) {
+    if (!empty($_POST['formRefund']['name']) &&
+        !empty($_POST['formRefund']['lastName']) &&
+        !empty($_POST['formRefund']['email']) &&
+        !empty($_POST['formRefund']['tel']) &&
+        !empty($_POST['formRefund']['orderId']) &&
+        !empty($_POST['formRefund']['date']) &&
+        !empty($_POST['formRefund']['productName']) &&
+        !empty($_POST['formRefund']['productId'])
+    ) {
         $message = '';
         $to = 'alexrud-a@yandex.ru';//get_option('admin_email');
         $headers = "Content-type: text/html; charset=utf-8";
         $headers .= "From: no-reply@mail.ru";
-        $subject = "Сообщение с сайта " . $_SERVER['SERVER_NAME'];
-        $message .= "Имя: " . $_POST['form']['name'];
-        $message .= "<br/>E-mail: " . $_POST['form']['email'];
-        $message .= "<br/>Телефон:<br/>" . $_POST['form']['tel'];
+        $subject = "Заявка на возврат " . $_SERVER['SERVER_NAME'];
+        $message .= "Имя: " . $_POST['formRefund']['name'];
+        $message .= "<br/>Фамилия: " . $_POST['formRefund']['lastName'];
+        $message .= "<br/>E-mail: " . $_POST['formRefund']['email'];
+        $message .= "<br/>Телефон:<br/>" . $_POST['formRefund']['tel'];
+        $message .= "<br/>Номер заказа:<br/>" . $_POST['formRefund']['orderId'];
+        $message .= "<br/>Дата заказа:<br/>" . $_POST['formRefund']['date'];
+        $message .= "<br/>Наименование товара:<br/>" . $_POST['formRefund']['productName'];
+        $message .= "<br/>Артикул товара:<br/>" . $_POST['formRefund']['productId'];
+        $message .= "<br/>Причина возврата:<br/>" . $_POST['formRefund']['comment'];
 
         if (wp_mail($to, $subject, $message, $headers)) {
-            $rtr = 'Cпасибо! Ваше сообщение отправлено!';
+            $rtr = 'Ваша заявка на возврат принята!';
         } else {
             $rtr = 'Возникла ошибка, попруйте отправить сообщение позже';
         }
