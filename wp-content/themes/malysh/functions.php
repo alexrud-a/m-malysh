@@ -298,6 +298,45 @@ function formRefund_function()
     wp_send_json($rtr);
 }
 
+add_action('wp_ajax_order1click', 'order1click_function'); // wp_ajax_{ЗНАЧЕНИЕ ПАРАМЕТРА ACTION!!}
+add_action('wp_ajax_nopriv_order1click', 'order1click_function');  // wp_ajax_nopriv_{ЗНАЧЕНИЕ ACTION!!}
+// первый хук для авторизованных, второй для не авторизованных пользователей
+
+function order1click_function()
+{
+
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (!empty($_POST['form']['name']) &&
+        !empty($_POST['form']['tel'])
+    ) {
+        $message = '';
+        $to = 'alexrud-a@yandex.ru';//get_option('admin_email');
+        $headers = "Content-type: text/html; charset=utf-8";
+        $headers .= "From: no-reply@mail.ru";
+        $subject = "Заявка на возврат " . $_SERVER['SERVER_NAME'];
+        $message .= "<h1>Форма купить в 1 клик</h1>";
+        $message .= "<p>Имя: " . $_POST['form']['name'] . "</p>";
+        $message .= "<p>Телефон:" . $_POST['form']['tel'] . "</p>";
+        $message .= "<p>Наименование товара:" . $_POST['product']['name'] . "</p>";
+        $message .= "<p>Артикул:" . $_POST['product']['sku'] . "</p>";
+        $message .= "<p>ID:" . $_POST['product']['id'] . "</p>";
+        $message .= "<p>Вариация:</p>";
+        $message .= "<p>Артикул: " . $_POST['currentVariation']['sku'] . " ID:" . $_POST['currentVariation']['id'] . "</p>";
+
+        if (wp_mail($to, $subject, $message, $headers)) {
+            $rtr = 'Спасибо! Ваш заказ принят, скоро наш менеджер свяжется с Вами для подтверждения';
+        } else {
+            $rtr = 'Возникла ошибка, попруйте оформить заказ позже';
+        }
+    } else {
+        $rtr = 'Все поля обязательны к заполнению!';
+    }
+
+    //die не нужен
+    wp_send_json($rtr);
+}
+
 add_action('wp_ajax_delivery', 'delivery_function'); // wp_ajax_{ЗНАЧЕНИЕ ПАРАМЕТРА ACTION!!}
 add_action('wp_ajax_nopriv_delivery', 'delivery_function');  // wp_ajax_nopriv_{ЗНАЧЕНИЕ ACTION!!}
 

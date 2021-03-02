@@ -70,7 +70,8 @@
           {{ product.name }}
         </h1>
         <div class="product__variations">
-          <span class="product__price" v-if="currentVariation && currentVariation.price">{{ currentVariation.price | formattedPrice }} ₽</span>
+          <span class="product__price"
+                v-if="currentVariation && currentVariation.price">{{ currentVariation.price | formattedPrice }} ₽</span>
           <span class="product__price" v-else v-html="product.price_html"></span>
           <span class="sup"> | </span>
           <span :class="product.stock_quantity === 'instock' ? 'color-l-gray' : ''">В наличии</span>
@@ -118,13 +119,14 @@
             <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like"/>
           </svg>
           В избранное
-        </b-btn><br/>
+        </b-btn>
+        <br/>
         <b-link v-b-modal.order-modal class="product__link-order">
           Заказать в один клик
         </b-link>
         <hr/>
         <b-modal id="order-modal" centered hide-footer title="Купить в 1 клик">
-          <Order1Click :form="form" @order="order"/>
+          <Order1Click :product="product" :currentVariation="currentVariation"/>
         </b-modal>
         <div class="tabs-collapse mb-4">
           <b-link v-b-toggle.short_description class="tabs-collapse__link">
@@ -225,11 +227,6 @@ export default {
       },
       variations: [],
       currentVariation: {},
-
-      form: {
-        name: '',
-        tel: '',
-      }
     }
   },
   filters: {
@@ -275,13 +272,6 @@ export default {
             return error;
           });
     },
-    order() {
-      //отправка заказа на почту
-      console.log('отправка заказа');
-      //this.form.name;
-      //this.form.tel;
-      //let product = this.product.attributes.length ? this.currentVariation : this.product;
-    }
   },
   computed: {
     ...mapGetters([

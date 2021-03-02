@@ -11,6 +11,21 @@ Vue.use(VueMeta, {
   refreshOnceOnNavigation: true
 });
 
+import VueMask from 'v-mask'
+
+Vue.use(VueMask);
+
+import {ValidationProvider, ValidationObserver, localize, extend} from 'vee-validate';
+import * as rules from 'vee-validate/dist/rules';
+
+Object.keys(rules).forEach(rule => {
+  extend(rule, rules[rule]);
+});
+
+import ru from '@/assets/ru.json';
+
+localize('ru', ru);
+
 Vue.config.productionTip = false
 
 new Vue({

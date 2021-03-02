@@ -92,149 +92,178 @@
           <h2>
             Доставка и оплата
           </h2>
-          <b-form @submit.prevent="order" class="form-refund">
-            <b-form-group>
-              <label class="label">
-                Выберите страну
-              </label>
-              <multiselect v-model="select_country" :options="countries"
-                           :id="select_country.code"
-                           :value="select_country.code"
-                           placeholder="Выберите страну" label="name"
-                           track-by="name" showLabels="false"
-                           allowEmpty="false" showNoResults="Результатов нет"
-                           selectLabel="" selectedLabel="" deselectLabel=""
-              />
-            </b-form-group>
-            <b-form-group label="Способ доставки"
-                          label-class="label"
-            >
-              <b-form-radio-group
-                  v-model="select_shipping"
-                  stacked
+          <ValidationObserver v-slot="{ handleSubmit }">
+            <b-form @submit.prevent="handleSubmit(order)" class="form-refund">
+              <b-form-group>
+                <label class="label">
+                  Выберите страну
+                </label>
+                <multiselect v-model="select_country" :options="countries"
+                             :id="select_country.code"
+                             :value="select_country.code"
+                             placeholder="Выберите страну" label="name"
+                             track-by="name" showLabels="false"
+                             allowEmpty="false" showNoResults="Результатов нет"
+                             selectLabel="" selectedLabel="" deselectLabel=""
+                />
+              </b-form-group>
+              <b-form-group label="Способ доставки"
+                            label-class="label"
               >
-                <b-form-radio
-                    v-for="shipping in custom_shippings"
-                    :key="shipping.id"
-                    :value="shipping"
+                <b-form-radio-group
+                    v-model="select_shipping"
+                    stacked
                 >
-                  {{ shipping.title }}
-                  <span class="shipping-pay">
+                  <b-form-radio
+                      v-for="shipping in custom_shippings"
+                      :key="shipping.id"
+                      :value="shipping"
+                  >
+                    {{ shipping.title }}
+                    <span class="shipping-pay">
                     {{ shipping.pay | formattedPrice }} ₽
                   </span>
-                </b-form-radio>
-              </b-form-radio-group>
-            </b-form-group>
-            <b-form-group label="Способ оплаты"
-                          label-class="label"
-            >
-              <b-form-radio-group
-                  v-model="select_payment"
-                  stacked
+                  </b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+              <b-form-group label="Способ оплаты"
+                            label-class="label"
               >
-                <b-form-radio
-                    v-for="payment in payments"
-                    :key="payment.id"
-                    :value="payment.id"
+                <b-form-radio-group
+                    v-model="select_payment"
+                    stacked
                 >
-                  {{ payment.title }}
-                </b-form-radio>
-              </b-form-radio-group>
-            </b-form-group>
-            <b-form-group>
-              <label class="label mb-0">
-                Итого
-              </label>
-            </b-form-group>
-            <b-form-group class="custom-radio cart__total">
-              <b-form-row class="justify-content-between">
+                  <b-form-radio
+                      v-for="payment in payments"
+                      :key="payment.id"
+                      :value="payment.id"
+                  >
+                    {{ payment.title }}
+                  </b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+              <b-form-group>
+                <label class="label mb-0">
+                  Итого
+                </label>
+              </b-form-group>
+              <b-form-group class="custom-radio cart__total">
+                <b-form-row class="justify-content-between">
                 <span>
                   Сумма заказа
                 </span>
-                <span>
+                  <span>
                   {{ cartTotal() | formattedPrice }} ₽
                 </span>
-              </b-form-row>
-              <b-form-row class="justify-content-between">
-                <span>Доставка</span>
-                <span>
+                </b-form-row>
+                <b-form-row class="justify-content-between">
+                  <span>Доставка</span>
+                  <span>
                   {{ select_shipping.pay | formattedPrice }} ₽
                 </span>
-              </b-form-row>
-              <b-form-row class="justify-content-between">
+                </b-form-row>
+                <b-form-row class="justify-content-between">
                 <span>
                   Общая стоимость
                 </span>
-                <span>
+                  <span>
                   {{ cartTotal() + select_shipping.pay | formattedPrice }} ₽
                 </span>
-              </b-form-row>
-            </b-form-group>
-            <b-form-group>
-              <label class="label mt-4">
-                Оформление заказа
-              </label>
-              <b-form-row>
-                <b-col md="4">
-                  <b-form-group>
-                    <b-input type="text" placeholder="Ваше имя" v-model="user.name"/>
-                  </b-form-group>
-                </b-col>
-                <b-col md="4">
-                  <b-form-group>
-                    <b-input type="text" placeholder="Ваша фамилия" v-model="user.last_name"/>
-                  </b-form-group>
-                </b-col>
-                <b-col md="4">
-                  <b-form-group>
-                    <b-input type="text" placeholder="Ваш email" v-model="user.email"/>
-                  </b-form-group>
-                </b-col>
-              </b-form-row>
-              <b-form-row>
-                <b-col md="4">
-                  <b-form-group>
-                    <b-input type="text" placeholder="Город" v-model="user.city"/>
-                  </b-form-group>
-                </b-col>
-                <b-col md="8">
-                  <b-form-group>
-                    <b-input type="text" placeholder="Улица" v-model="user.street"/>
-                  </b-form-group>
-                </b-col>
-              </b-form-row>
-              <b-form-row>
-                <b-col md="4">
-                  <b-form-group>
-                    <b-input type="text" placeholder="Номер дома" v-model="user.house"/>
-                  </b-form-group>
-                </b-col>
-                <b-col md="4">
-                  <b-form-group>
-                    <b-input type="text" placeholder="Номер квартиры" v-model="user.flat"/>
-                  </b-form-group>
-                </b-col>
-                <b-col md="4">
-                  <b-form-group>
-                    <b-input type="text" placeholder="Телефон" v-model="user.tel"/>
-                  </b-form-group>
-                </b-col>
-              </b-form-row>
-              <b-form-row>
-                <b-col md="4">
-                  <b-form-group>
-                    <b-input type="text" placeholder="Индекс" v-model="user.postcode"
-                             @change="getTotalDelivery"/>
-                  </b-form-group>
-                </b-col>
-              </b-form-row>
-              <b-form-group>
-                <b-btn type="submit" class="btn btn-blue">
-                  Оформить заказ
-                </b-btn>
+                </b-form-row>
               </b-form-group>
-            </b-form-group>
-          </b-form>
+              <b-form-group>
+                <label class="label mt-4">
+                  Оформление заказа
+                </label>
+                <b-form-row>
+                  <b-col md="4">
+                    <b-form-group>
+                      <validation-provider rules="required" v-slot="{ errors }">
+                        <b-input type="text" placeholder="Ваше имя" v-model="user.name"/>
+                        <span class="error">{{ errors[0] }}</span>
+                      </validation-provider>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="4">
+                    <b-form-group>
+                      <validation-provider rules="required" v-slot="{ errors }">
+                        <b-input type="text" placeholder="Ваша фамилия" v-model="user.last_name"/>
+                        <span class="error">{{ errors[0] }}</span>
+                      </validation-provider>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="4">
+                    <b-form-group>
+                      <validation-provider rules="required|email" v-slot="{ errors }">
+                        <b-input type="text" placeholder="Ваш email" v-model="user.email"/>
+                        <span class="error">{{ errors[0] }}</span>
+                      </validation-provider>
+                    </b-form-group>
+                  </b-col>
+                </b-form-row>
+                <b-form-row>
+                  <b-col md="4">
+                    <b-form-group>
+                      <validation-provider rules="required" v-slot="{ errors }">
+                        <b-input type="text" placeholder="Город" v-model="user.city"/>
+                        <span class="error">{{ errors[0] }}</span>
+                      </validation-provider>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="8">
+                    <b-form-group>
+                      <validation-provider rules="required" v-slot="{ errors }">
+                        <b-input type="text" placeholder="Улица" v-model="user.street"/>
+                        <span class="error">{{ errors[0] }}</span>
+                      </validation-provider>
+                    </b-form-group>
+                  </b-col>
+                </b-form-row>
+                <b-form-row>
+                  <b-col md="4">
+                    <b-form-group>
+                      <validation-provider rules="required" v-slot="{ errors }">
+                        <b-input type="text" placeholder="Номер дома" v-model="user.house"/>
+                        <span class="error">{{ errors[0] }}</span>
+                      </validation-provider>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="4">
+                    <b-form-group>
+                      <validation-provider rules="required" v-slot="{ errors }">
+                        <b-input type="text" placeholder="Номер квартиры" v-model="user.flat"/>
+                        <span class="error">{{ errors[0] }}</span>
+                      </validation-provider>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="4">
+                    <b-form-group>
+                      <validation-provider rules="required" v-slot="{ errors }">
+                        <b-input type="text" placeholder="Телефон" v-model="user.tel" v-mask="'+7(###) ### - ## - ##'"/>
+                        <span class="error">{{ errors[0] }}</span>
+                      </validation-provider>
+                    </b-form-group>
+                  </b-col>
+                </b-form-row>
+                <b-form-row>
+                  <b-col md="4">
+                    <b-form-group>
+                      <validation-provider rules="required|digits:6" v-slot="{ errors }">
+                        <b-input type="text" placeholder="Индекс" v-model="user.postcode"
+                                 @change="getTotalDelivery"/>
+                        <span class="error">{{ errors[0] }}</span>
+                      </validation-provider>
+                    </b-form-group>
+                  </b-col>
+                </b-form-row>
+                <b-form-group>
+                  <b-btn type="submit" class="btn btn-blue">
+                    Оформить заказ
+                  </b-btn>
+                </b-form-group>
+              </b-form-group>
+            </b-form>
+          </ValidationObserver>
         </b-col>
       </template>
       <template v-else>
@@ -258,6 +287,7 @@ import {formattedPrice} from "@/utils";
 import Multiselect from 'vue-multiselect';
 import axios from "axios";
 import qs from "qs";
+import {ValidationProvider, ValidationObserver} from "vee-validate";
 
 export default {
   name: "Cart",
@@ -286,7 +316,7 @@ export default {
       codeToCdek: '',
     }
   },
-  components: {Multiselect},
+  components: {Multiselect, ValidationProvider, ValidationObserver},
   filters: {
     formattedPrice,
   },
