@@ -121,7 +121,14 @@
                   >
                     {{ shipping.title }}
                     <span class="shipping-pay">
-                    {{ shipping.pay | formattedPrice }} ₽
+                      <template v-if="shipping.pay > 0">
+                        {{ shipping.pay | formattedPrice }} ₽
+                      </template>
+                      <template v-else>
+                        <p>
+                          Не удалось рассчитать сумму доставки, заполните данные в форме
+                        </p>
+                      </template>
                   </span>
                   </b-form-radio>
                 </b-form-radio-group>
@@ -163,12 +170,15 @@
                 </span>
                 </b-form-row>
                 <b-form-row class="justify-content-between">
-                <span>
-                  Общая стоимость
-                </span>
                   <span>
-                  {{ cartTotal() + select_shipping.pay | formattedPrice }} ₽
-                </span>
+                    Общая стоимость
+                  </span>
+                  <span v-if="select_shipping.pay > 0">
+                    {{ cartTotal() + select_shipping.pay | formattedPrice }} ₽
+                  </span>
+                  <span v-else>
+                    {{ cartTotal() | formattedPrice }} ₽
+                  </span>
                 </b-form-row>
               </b-form-group>
               <b-form-group>
@@ -250,7 +260,7 @@
                     <b-form-group>
                       <validation-provider rules="required|digits:6" v-slot="{ errors }">
                         <b-input type="text" placeholder="Индекс" v-model="user.postcode"
-                                 @change="getTotalDelivery"/>
+                                 @change="getCodeForCdek"/>
                         <span class="error">{{ errors[0] }}</span>
                       </validation-provider>
                     </b-form-group>
