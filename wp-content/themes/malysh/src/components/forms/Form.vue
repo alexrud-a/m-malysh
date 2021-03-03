@@ -1,5 +1,5 @@
 <template>
-  <ValidationObserver v-slot="{ handleSubmit }">
+  <ValidationObserver v-slot="{ handleSubmit }" ref="form">
     <b-form @submit.prevent="handleSubmit(onSubmit)" class="form contact-form">
       <h3>
         Связаться с нами
@@ -41,6 +41,9 @@
         Оставить заявку
       </b-btn>
     </b-form>
+    <b-modal id="response" centered hide-footer hide-header>
+      <ModalResponse :msg="msg"/>
+    </b-modal>
   </ValidationObserver>
 </template>
 
@@ -48,6 +51,7 @@
 import axios from "axios";
 import qs from "qs";
 import {ValidationProvider, ValidationObserver} from "vee-validate";
+import ModalResponse from "@/components/forms/ModalResponse";
 
 export default {
   name: "Form",
@@ -58,10 +62,11 @@ export default {
         tel: '',
         email: '',
         accept: true,
-      }
+      },
+      msg: '',
     }
   },
-  components: {ValidationProvider, ValidationObserver},
+  components: {ModalResponse, ValidationProvider, ValidationObserver},
   methods: {
     onSubmit() {
       return axios('/wp-admin/admin-ajax.php', {
@@ -73,8 +78,9 @@ export default {
       })
           .then(response => {
             let res = qs.parse(response.data);
-            console.log(res);
             this.onReset();
+            this.msg = res.msg;
+            this.$bvModal.show('response');
             return res;
           })
           .catch(error => {
@@ -88,6 +94,7 @@ export default {
         tel: '',
         email: ''
       }
+      this.$refs.form.reset();
     }
   }
 }

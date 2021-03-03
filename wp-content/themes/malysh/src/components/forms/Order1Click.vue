@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <ValidationObserver v-slot="{ handleSubmit }">
+    <ValidationObserver v-slot="{ handleSubmit }" ref="form">
       <b-form @submit.prevent="handleSubmit(order)">
         <b-form-group>
           <validation-provider rules="required" v-slot="{ errors }">
@@ -24,6 +24,9 @@
         </b-form-group>
       </b-form>
     </ValidationObserver>
+    <b-modal id="response-order" centered hide-footer hide-header>
+      <ModalResponse :msg="msg"/>
+    </b-modal>
   </b-container>
 </template>
 
@@ -31,6 +34,7 @@
 import {ValidationProvider, ValidationObserver} from "vee-validate";
 import axios from "axios";
 import qs from "qs";
+import ModalResponse from "@/components/forms/ModalResponse";
 
 export default {
   name: "Order1Click",
@@ -39,7 +43,8 @@ export default {
       form: {
         name: '',
         tel: ''
-      }
+      },
+      msg: '',
     }
   },
   props: {
@@ -54,7 +59,7 @@ export default {
       }
     }
   },
-  components: {ValidationProvider, ValidationObserver},
+  components: {ModalResponse, ValidationProvider, ValidationObserver},
   methods: {
     order() {
       return axios('/wp-admin/admin-ajax.php', {
@@ -68,8 +73,9 @@ export default {
       })
           .then(response => {
             let res = qs.parse(response.data);
-            console.log(res);
             this.onReset();
+            this.msg = res.msg;
+            this.$bvModal.show('response-order');
             return res;
           })
           .catch(error => {
@@ -81,7 +87,8 @@ export default {
       this.form = {
         name: '',
         tel: ''
-      }
+      };
+      this.$refs.form.reset();
     }
   }
 }

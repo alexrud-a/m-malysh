@@ -1,5 +1,5 @@
 <template>
-  <ValidationObserver v-slot="{ handleSubmit }">
+  <ValidationObserver v-slot="{ handleSubmit }" ref="formRefund">
     <b-form class="form-refund" @submit.prevent="handleSubmit(onSubmit)">
       <h3 class="form-refund__title">
         Пожалуйста, заполните форму для возврата товара
@@ -108,6 +108,9 @@
         Нажимая на кнопку «Вернуть заказ», вы соглашаетеь с Гарантиями
       </p>
     </b-form>
+    <b-modal id="response-refund" centered hide-footer hide-header>
+      <ModalResponse :msg="msg"/>
+    </b-modal>
   </ValidationObserver>
 </template>
 
@@ -115,6 +118,7 @@
 import axios from "axios";
 import qs from "qs";
 import {ValidationProvider, ValidationObserver} from "vee-validate";
+import ModalResponse from "@/components/forms/ModalResponse";
 
 export default {
   name: "FormRefund",
@@ -130,10 +134,11 @@ export default {
         productName: '',
         productId: '',
         comment: ''
-      }
+      },
+      msg: '',
     }
   },
-  components: {ValidationProvider, ValidationObserver},
+  components: {ModalResponse, ValidationProvider, ValidationObserver},
   methods: {
     onSubmit() {
       return axios('/wp-admin/admin-ajax.php', {
@@ -145,8 +150,9 @@ export default {
       })
           .then(response => {
             let res = qs.parse(response.data);
-            console.log(res);
             this.onReset();
+            this.msg = res.msg;
+            this.$bvModal.show('response-refund');
             return res;
           })
           .catch(error => {
@@ -165,7 +171,8 @@ export default {
         productName: '',
         productId: '',
         comment: ''
-      }
+      };
+      this.$refs.formRefund.reset();
     }
   }
 }

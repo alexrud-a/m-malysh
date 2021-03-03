@@ -239,12 +239,18 @@ function form_function()
         $message .= "<p>Телефон:" . $_POST['form']['tel'] . "</p>";
 
         if (wp_mail($to, $subject, $message, $headers)) {
-            $rtr = 'Cпасибо! Ваше сообщение отправлено!';
+            $rtr = [
+                'msg' => 'Cпасибо! Ваше сообщение отправлено!'
+            ];
         } else {
-            $rtr = 'Возникла ошибка, попруйте отправить сообщение позже';
+            $rtr = [
+                'msg' => 'Возникла ошибка, попруйте отправить сообщение позже'
+            ];
         }
     } else {
-        $rtr = 'Все поля обязательны к заполнению!';
+        $rtr = [
+            'msg' => 'Все поля обязательны к заполнению!'
+        ];
     }
 
     //die не нужен
@@ -286,12 +292,18 @@ function formRefund_function()
         $message .= "<p>Причина возврата:" . $_POST['formRefund']['comment'] . "</p>";
 
         if (wp_mail($to, $subject, $message, $headers)) {
-            $rtr = 'Ваша заявка на возврат принята!';
+            $rtr = [
+                'msg' => 'Ваша заявка на возврат принята!'
+            ];
         } else {
-            $rtr = 'Возникла ошибка, попруйте отправить сообщение позже';
+            $rtr = [
+                'msg' => 'Возникла ошибка, попруйте отправить сообщение позже'
+            ];
         }
     } else {
-        $rtr = 'Все поля обязательны к заполнению!';
+        $rtr = [
+            'msg' => 'Все поля обязательны к заполнению!'
+        ];
     }
 
     //die не нужен
@@ -325,12 +337,18 @@ function order1click_function()
         $message .= "<p>Артикул: " . $_POST['currentVariation']['sku'] . " ID:" . $_POST['currentVariation']['id'] . "</p>";
 
         if (wp_mail($to, $subject, $message, $headers)) {
-            $rtr = 'Спасибо! Ваш заказ принят, скоро наш менеджер свяжется с Вами для подтверждения';
+            $rtr = [
+                'msg' => 'Спасибо! Ваш заказ принят, скоро наш менеджер свяжется с Вами для подтверждения'
+            ];
         } else {
-            $rtr = 'Возникла ошибка, попруйте оформить заказ позже';
+            $rtr = [
+                'msg' => 'Возникла ошибка, попруйте оформить заказ позже'
+            ];
         }
     } else {
-        $rtr = 'Все поля обязательны к заполнению!';
+        $rtr = [
+            'msg' => 'Все поля обязательны к заполнению!'
+        ];
     }
 
     //die не нужен
@@ -352,7 +370,7 @@ function delivery_function()
         'client_secret' => 'bLnCdu3F31n5ymVa8EGecZwT6WaopWir'
     ];
 
-    $path = 'https://api.cdek.ru/v2/oauth/token?grant_type='. $cdek_auth['grant_type'] .'&client_id='. $cdek_auth['client_id'] .'&client_secret='. $cdek_auth['client_secret'];
+    $path = 'https://api.cdek.ru/v2/oauth/token?grant_type=' . $cdek_auth['grant_type'] . '&client_id=' . $cdek_auth['client_id'] . '&client_secret=' . $cdek_auth['client_secret'];
 
     $myCurl = curl_init();
     curl_setopt_array($myCurl, array(
