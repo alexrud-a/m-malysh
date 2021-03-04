@@ -82,10 +82,10 @@
           <b-form-group v-for="attribute in product.attributes"
                         :key="attribute.id"
                         :label="attribute.name"
-                        :class="{'d-none' : attribute.id === 1}"
+                        :class="{'d-none' : attribute.id === 5}"
           >
             <b-form-radio-group
-                v-if="attribute.id !== 1"
+                v-if="attribute.id !== 5"
                 :id="'checkbox-group-'+attribute.id"
                 :class="'checkbox-'+attribute.id"
                 v-model="variationsOption[attribute.id]"
