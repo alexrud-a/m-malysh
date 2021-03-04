@@ -459,11 +459,6 @@ function registration_function() {
         !empty($_POST['register']['email']) &&
         !empty($_POST['register']['tel'])
     ) {
-        if (settype($_POST['register']['opt'], 'boolean') === true) {
-            $opt = 'Да';
-        } else {
-            $opt = 'Нет';
-        }
         $message = '';
         $to = 'alexrud-a@yandex.ru';//get_option('admin_email');
         $headers = "Content-type: text/html; charset=utf-8";
@@ -474,7 +469,7 @@ function registration_function() {
         $message .= "<p>Фамилия: " . $_POST['register']['name'] . "</p>";
         $message .= "<p>Email: " . $_POST['register']['email'] . "</p>";
         $message .= "<p>Телефон:" . $_POST['register']['tel'] . "</p>";
-        $message .= "<p>Оптовый покупатель:" . $opt . "</p>";
+        $message .= "<p>Оптовый покупатель:" . $_POST['register']['opt'] . "</p>";
 
         if (wp_mail($to, $subject, $message, $headers)) {
             $rtr = [

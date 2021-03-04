@@ -140,6 +140,7 @@ export default {
               this.error = '';
               this.$bvModal.hide('authorization');
               this.onReset();
+              this.$refs.formAuth.reset();
             }
           });
     },
@@ -154,6 +155,7 @@ export default {
           .then(response => {
             let res = qs.parse(response.data);
             this.onReset();
+            this.$refs.formRegister.reset();
             this.msg = res.msg;
             return res;
           })
@@ -174,8 +176,6 @@ export default {
         tel: '',
         accept: true
       };
-      this.$refs.formAuth.reset();
-      this.$refs.formRegister.reset();
     }
   }
 }

@@ -328,6 +328,18 @@ export default {
       }
     }
   }
+
+  &__user {
+    svg {
+      fill: #000;
+    }
+
+    &:hover {
+      svg {
+        fill: $blue;
+      }
+    }
+  }
 }
 
 </style>
