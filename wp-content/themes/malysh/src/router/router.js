@@ -12,6 +12,7 @@ import Checkout from "@/components/shop/Checkout";
 import Search from "@/components/search/Search";
 import NotFound from "@/components/404/NotFound";
 import Cart from "@/components/shop/Cart";
+import Profile from "@/components/user/Profile";
 
 Vue.use(Router);
 
@@ -74,6 +75,11 @@ let router = new Router({
             path: '/search',
             name: 'Search',
             component: Search,
+        },
+        {
+            path: '/profile',
+            name: 'Profile',
+            component: Profile,
         },
         {
             path: "/page-not-found",

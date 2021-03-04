@@ -22,5 +22,8 @@ export default {
     },
     USER_CITY(state) {
         return state.userCity;
+    },
+    USER(state) {
+        return state.user;
     }
 }

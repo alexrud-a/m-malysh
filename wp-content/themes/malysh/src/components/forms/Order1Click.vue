@@ -10,7 +10,7 @@
         </b-form-group>
         <b-form-group>
           <validation-provider rules="required" v-slot="{ errors }">
-            <b-input type="tel" placeholder="Телефон"
+            <b-input type="tel" placeholder="+7 (___) ___ - __ - __"
                      v-model="form.tel"
                      v-mask="'+7(###) ### - ## - ##'"
             />

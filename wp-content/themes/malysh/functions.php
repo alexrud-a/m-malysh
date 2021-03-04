@@ -395,9 +395,10 @@ function delivery_function()
             "code" => "337"
         ],
         "to_location" => [
-            "code" => $_POST['data']['to_cdek']
+            "code" => $_POST['data']['to_cdek'],
+            "postal_code" => $_POST['data']['to'],
         ],
-        'tariff_code' => '136',
+        'tariff_code' => '137',
         "packages" => [
             "height" => 30,
             "length" => 30,
@@ -430,4 +431,65 @@ function delivery_function()
     ];
 
     wp_send_json($result);
+}
+
+add_action('wp_ajax_user', 'user_function'); // wp_ajax_{ЗНАЧЕНИЕ ПАРАМЕТРА ACTION!!}
+add_action('wp_ajax_nopriv_user', 'user_function');  // wp_ajax_nopriv_{ЗНАЧЕНИЕ ACTION!!}
+
+function user_function() {
+
+    wp_logout();
+
+    $user = wp_signon();
+
+    if ( is_wp_error($user) ) {
+        wp_send_json(['error' => $user->get_error_message()]);
+    } else {
+        wp_send_json($user);
+    }
+}
+
+add_action('wp_ajax_registration', 'registration_function'); // wp_ajax_{ЗНАЧЕНИЕ ПАРАМЕТРА ACTION!!}
+add_action('wp_ajax_nopriv_registration', 'registration_function');  // wp_ajax_nopriv_{ЗНАЧЕНИЕ ACTION!!}
+
+function registration_function() {
+
+    if (!empty($_POST['register']['name']) &&
+        !empty($_POST['register']['lastName']) &&
+        !empty($_POST['register']['email']) &&
+        !empty($_POST['register']['tel'])
+    ) {
+        if (settype($_POST['register']['opt'], 'boolean') === true) {
+            $opt = 'Да';
+        } else {
+            $opt = 'Нет';
+        }
+        $message = '';
+        $to = 'alexrud-a@yandex.ru';//get_option('admin_email');
+        $headers = "Content-type: text/html; charset=utf-8";
+        $headers .= "From: no-reply@mail.ru";
+        $subject = "Заявка на возврат " . $_SERVER['SERVER_NAME'];
+        $message .= "<h1>Заявка на регистрацию</h1>";
+        $message .= "<p>Имя: " . $_POST['register']['name'] . "</p>";
+        $message .= "<p>Фамилия: " . $_POST['register']['name'] . "</p>";
+        $message .= "<p>Email: " . $_POST['register']['email'] . "</p>";
+        $message .= "<p>Телефон:" . $_POST['register']['tel'] . "</p>";
+        $message .= "<p>Оптовый покупатель:" . $opt . "</p>";
+
+        if (wp_mail($to, $subject, $message, $headers)) {
+            $rtr = [
+                'msg' => 'Ваша заявка на регистрацию принята! Вам придет уведомление на Email'
+            ];
+        } else {
+            $rtr = [
+                'msg' => 'Возникла ошибка, попробуйте отправить заявку позже'
+            ];
+        }
+    } else {
+        $rtr = [
+            'msg' => 'Все поля обязательны к заполнению!'
+        ];
+    }
+
+    wp_send_json($rtr);
 }

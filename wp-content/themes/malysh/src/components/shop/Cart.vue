@@ -215,7 +215,7 @@
                   <b-col md="4">
                     <b-form-group>
                       <validation-provider rules="required" v-slot="{ errors }">
-                        <b-input type="text" placeholder="Город" v-model="user.city"/>
+                        <b-input type="text" placeholder="Город" v-model="user.city" @change="changeAddress"/>
                         <span class="error">{{ errors[0] }}</span>
                       </validation-provider>
                     </b-form-group>
@@ -249,7 +249,7 @@
                   <b-col md="4">
                     <b-form-group>
                       <validation-provider rules="required" v-slot="{ errors }">
-                        <b-input type="text" placeholder="Телефон" v-model="user.tel" v-mask="'+7(###) ### - ## - ##'"/>
+                        <b-input type="text" placeholder="+7 (___) ___ - __ - __" v-model="user.tel" v-mask="'+7(###) ### - ## - ##'"/>
                         <span class="error">{{ errors[0] }}</span>
                       </validation-provider>
                     </b-form-group>
@@ -259,8 +259,7 @@
                   <b-col md="4">
                     <b-form-group>
                       <validation-provider rules="required|digits:6" v-slot="{ errors }">
-                        <b-input type="text" placeholder="Индекс" v-model="user.postcode"
-                                 @change="getCodeForCdek"/>
+                        <b-input type="text" placeholder="Индекс" v-model="user.postcode"/>
                         <span class="error">{{ errors[0] }}</span>
                       </validation-provider>
                     </b-form-group>
@@ -399,6 +398,12 @@ export default {
     },
     decrement(index) {
       this.DECREMENT_CART_ITEM(index);
+    },
+    changeAddress() {
+      //при изменении данных адреса собирать все данные и отправлять запрос
+      // дадате на определение города, затем взять из ответа код кладр и
+      // отправить второй запрос на получение id города для сдека и вызвать
+      // метод перерасчета стоимости доставки
     },
     getCodeForCdek() {
       return axios('https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/delivery', {

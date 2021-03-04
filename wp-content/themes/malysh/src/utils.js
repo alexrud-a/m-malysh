@@ -37,3 +37,13 @@ export function formattedPrice(price) {
         price = price.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
     return price;
 }
+
+export function get_cookie ( cookie_name )
+{
+    var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
+
+    if ( results )
+        return ( unescape ( results[2] ) );
+    else
+        return null;
+}

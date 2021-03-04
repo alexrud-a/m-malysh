@@ -40,7 +40,7 @@
         <b-col md="4">
           <b-form-group>
             <validation-provider rules="required" v-slot="{ errors }">
-              <b-input placeholder="Телефон"
+              <b-input placeholder="+7 (___) ___ - __ - __"
                        v-model="formRefund.tel"
                        v-mask="'+7(###) ### - ## - ##'"
               />

@@ -15,7 +15,7 @@ import VueMask from 'v-mask'
 
 Vue.use(VueMask);
 
-import {ValidationProvider, ValidationObserver, localize, extend} from 'vee-validate';
+import {localize, extend} from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules';
 
 Object.keys(rules).forEach(rule => {

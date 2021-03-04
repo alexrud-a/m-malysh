@@ -101,6 +101,19 @@
               {{ CART.reduce((s, i) => s = s + i.quantity, 0) }}
             </span>
           </router-link>
+          <router-link :to="{name: 'Profile'}" v-if="USER.ID" class="header__user">
+            <svg width="25" height="25">
+              <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#user"/>
+            </svg>
+          </router-link>
+          <b-link v-else v-b-modal.authorization class="header__user">
+            <svg width="25" height="25">
+              <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#user"/>
+            </svg>
+          </b-link>
+          <b-modal id="authorization" centered hide-footer title="Авторизация">
+            <Authorization/>
+          </b-modal>
         </b-col>
       </b-row>
     </b-container>
@@ -125,9 +138,11 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import axios from 'axios';
+import Authorization from "@/components/forms/Authorization";
 
 export default {
   name: "Header",
+  components: {Authorization},
   data() {
     return {
       siteInfo: '',
@@ -142,12 +157,13 @@ export default {
       'CART',
       'WISHLIST',
       'USER_CITY',
+      'USER'
     ]),
   },
   methods: {
     ...mapActions([
-        'GET_CITY_USER',
-        'CHANGE_CITY'
+      'GET_CITY_USER',
+      'CHANGE_CITY',
     ]),
     changeCity() {
       this.CHANGE_CITY(this.city);
@@ -189,6 +205,7 @@ export default {
     this.getMenu();
     this.getContacts();
     this.GET_CITY_USER();
+    console.log(this.USER);
   }
 }
 </script>

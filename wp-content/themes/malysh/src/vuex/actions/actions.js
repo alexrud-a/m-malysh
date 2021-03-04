@@ -1,7 +1,32 @@
 import {tokenDadata, WooCommerce} from '../../consts';
 import axios from "axios";
+import qs from "qs";
 
 export default {
+    GET_USER({commit}, user) {
+        return axios('/wp-admin/admin-ajax.php', {
+            method: 'POST',
+            data: qs.stringify({
+                action: 'user',
+                log: user.log,
+                pwd: user.pwd,
+                rememberme: user.rememberme
+            }),
+        })
+            .then(response => {
+                console.log(response);
+                if(response.data.error) {
+                    return response
+                } else {
+                    commit('SET_USER', response.data);
+                    document.cookie = 'user='+JSON.stringify(response.data)+'; path=/; max-age=86400';
+                    return response
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    },
     CHANGE_CITY({commit}, city) {
         return axios('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
             method: "POST",
