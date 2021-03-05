@@ -1,5 +1,5 @@
 <template>
-  <div class="filter">
+  <div class="filter mb-5">
     <h3>
       Подобрать товар
     </h3>

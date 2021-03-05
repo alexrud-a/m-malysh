@@ -36,11 +36,14 @@ export default {
     return {
       title: '',
       content: [],
+      meta: [],
+      metaTitle: '',
     }
   },
   metaInfo() {
     return {
-      title: this.title,
+      title: this.metaTitle,
+      meta: this.meta,
     }
   },
   methods: {
@@ -51,6 +54,8 @@ export default {
           .then((response) => {
             this.title = response.data.title.rendered;
             this.content = response.data.content.rendered;
+            this.meta = response.data.yoast_meta;
+            this.metaTitle = response.data.yoast_title;
           })
           .catch((error) => {
             console.log(error);

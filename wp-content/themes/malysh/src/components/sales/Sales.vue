@@ -56,11 +56,14 @@ export default {
       title: '',
       content: [],
       sales: [],
-      metaInfo() {
-        return {
-          title: this.title,
-        }
-      },
+      meta: [],
+      metaTitle: '',
+    }
+  },
+  metaInfo() {
+    return {
+      title: this.metaTitle,
+      meta: this.meta,
     }
   },
   methods: {
@@ -71,7 +74,9 @@ export default {
           .then((response) => {
             this.title = response.data.title.rendered;
             this.content = response.data.content.rendered;
-            this.sales = response.data.acf.sales
+            this.sales = response.data.acf.sales;
+            this.meta = response.data.yoast_meta;
+            this.metaTitle = response.data.yoast_title;
           })
           .catch((error) => {
             console.log(error);

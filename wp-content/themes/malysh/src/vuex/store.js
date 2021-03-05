@@ -8,10 +8,6 @@ import {get_cookie} from "@/utils";
 
 Vue.use(Vuex)
 
-import VueCookie from 'vue-cookie';
-
-Vue.use(VueCookie);
-
 let cart_data = [];
 
 if (localStorage.getItem("m-cart") !== null) {
@@ -40,6 +36,12 @@ if (get_cookie('user') !== null) {
     user = JSON.parse(get_cookie('user'));
 }
 
+let city = [];
+
+if (get_cookie('location') !== null) {
+    city = JSON.parse(get_cookie('location'));
+}
+
 let store = new Vuex.Store({
     state: {
         products: [],
@@ -50,7 +52,8 @@ let store = new Vuex.Store({
         cart: cart_data,
         wishlist: wishlist_data,
         user: user,
-        userCity: ''
+        userCity: '',
+        city: city,
     },
     mutations,
     actions,

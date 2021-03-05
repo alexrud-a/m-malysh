@@ -136,7 +136,7 @@ export default {
   },
   metaInfo() {
     return {
-      title: this.category.name,
+      title: 'Мой малыш - ' + this.category.name,
     }
   },
   computed: {

@@ -355,13 +355,11 @@ function order1click_function()
     wp_send_json($rtr);
 }
 
-add_action('wp_ajax_delivery', 'delivery_function'); // wp_ajax_{ЗНАЧЕНИЕ ПАРАМЕТРА ACTION!!}
-add_action('wp_ajax_nopriv_delivery', 'delivery_function');  // wp_ajax_nopriv_{ЗНАЧЕНИЕ ACTION!!}
+add_action('wp_ajax_delivery_cdek', 'delivery_cdek_function'); // wp_ajax_{ЗНАЧЕНИЕ ПАРАМЕТРА ACTION!!}
+add_action('wp_ajax_nopriv_delivery_cdek', 'delivery_cdek_function');  // wp_ajax_nopriv_{ЗНАЧЕНИЕ ACTION!!}
 
-function delivery_function()
+function delivery_cdek_function()
 {
-    $data = json_decode(file_get_contents('php://input'), true);
-
     //Авторизация СДЕК
 
     $cdek_auth = [
@@ -387,23 +385,60 @@ function delivery_function()
 
     ////////////////////////////////////////////////////////////
 
+    $data_to_cdek = [
+        'postal_code' => $_POST['data']['to']
+    ];
+
+    $path = 'https://api.cdek.ru/v2/deliverypoints?' . http_build_query($data_to_cdek);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $token));
+    curl_setopt($ch, CURLOPT_URL, $path);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $code_city = json_decode($response, true)[0]['location']['city_code'];
+
+
+    if (empty($code_city)) {
+        $data_to_cdek = [
+            'postal_code' => $_POST['data']['to']
+        ];
+
+        $path = 'https://api.cdek.ru/v2/location/cities?' . http_build_query($data_to_cdek);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $token));
+        curl_setopt($ch, CURLOPT_URL, $path);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $code_city = json_decode($response, true)[0]['code'];
+
+    }
+
+    ////////////////////////////////////////////////////////////
+
     //Расчет доставки СДЕК
-    $path = 'https://api.cdek.ru/v2/calculator/tariff';
+    $path = 'https://api.cdek.ru/v2/calculator/tarifflist';
 
     $data_to_cdek = [
+        "type" => 1,
         "from_location" => [
             "code" => "337"
         ],
         "to_location" => [
-            "code" => $_POST['data']['to_cdek'],
-            "postal_code" => $_POST['data']['to'],
+            "code" => $code_city,
         ],
-        'tariff_code' => '137',
         "packages" => [
-            "height" => 30,
-            "length" => 30,
+            "height" => 22,
+            "length" => 36,
             "weight" => $_POST['data']['weight'],
-            "width" => 50
+            "width" => 53
         ]
     ];
 
@@ -416,22 +451,28 @@ function delivery_function()
     $response = curl_exec($ch);
     curl_close($ch);
 
-    $path_post = 'https://tariff.pochta.ru/v2/calculate/tariff?json&object=3020&from=' . $_POST['data']['from'] . '&to=' . $_POST['data']['to'] . '&weight=' . $_POST['data']['weight'] . '&isavia=0&closed=1&sumoc=' . $_POST['data']['sumoc'] . '&date=' . date('Ymd');
 
-    $ch2 = curl_init();
-    curl_setopt($ch2, CURLOPT_URL, $path_post);
-    //curl_setopt($ch2, CURLOPT_POSTFIELDS, http_build_query(array('Content-Type: application/x-www-form-urlencoded')));
-    curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-    $response2 = curl_exec($ch2);
-    curl_close($ch2);
-
-    $result = [
-        'cdek' => json_decode($response),
-        'russianPost' => json_decode($response2),
-    ];
-
-    wp_send_json($result);
+    wp_send_json(json_decode($response));
 }
+
+add_action('wp_ajax_delivery_post', 'delivery_post_function'); // wp_ajax_{ЗНАЧЕНИЕ ПАРАМЕТРА ACTION!!}
+add_action('wp_ajax_nopriv_delivery_post', 'delivery_post_function');  // wp_ajax_nopriv_{ЗНАЧЕНИЕ ACTION!!}
+
+function delivery_post_function()
+{
+
+    $path_post = 'https://tariff.pochta.ru/v2/calculate/tariff?json&object=3020&from=394042&to=' . $_POST['data']['to'] . '&weight=' . $_POST['data']['weight'] . '&isavia=0&closed=1&service=20,21,22&sumoc=' . $_POST['data']['sumoc'] . '&date=' . date('Ymd');
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $path_post);
+    //curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('Content-Type: application/x-www-form-urlencoded')));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    wp_send_json(json_decode($response));
+}
+
 
 add_action('wp_ajax_user', 'user_function'); // wp_ajax_{ЗНАЧЕНИЕ ПАРАМЕТРА ACTION!!}
 add_action('wp_ajax_nopriv_user', 'user_function');  // wp_ajax_nopriv_{ЗНАЧЕНИЕ ACTION!!}

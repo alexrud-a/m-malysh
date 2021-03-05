@@ -6,7 +6,7 @@
           <b-breadcrumb-item href="/">
             Главная
           </b-breadcrumb-item>
-          <b-breadcrumb-item v-for="cat in product.categories"
+          <b-breadcrumb-item v-for="cat in sortedBreadcrumbsCat"
                              :key="cat.id"
                              :href="'/category/'+cat.slug"
           >
@@ -229,6 +229,11 @@ export default {
       currentVariation: {},
     }
   },
+  metaInfo() {
+    return {
+      title: 'Мой малыш - ' + this.product.name,
+    }
+  },
   filters: {
     formattedPrice
   },
@@ -277,6 +282,9 @@ export default {
     ...mapGetters([
       'PRODUCTS',
     ]),
+    sortedBreadcrumbsCat() {
+      return this.product.categories.slice().sort((a, b) => a.id - b.id);
+    }
   },
   watch: {
     $route(to, from) {

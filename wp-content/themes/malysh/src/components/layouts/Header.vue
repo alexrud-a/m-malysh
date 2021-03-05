@@ -12,7 +12,12 @@
                class="header__city-link"
                @click.prevent="$bvToast.show('city-toast')"
             >
-              {{ USER_CITY.city_with_type }}
+              <template v-if="USER_CITY.city_with_type !== null">
+                {{ USER_CITY.city_with_type }}
+              </template>
+              <template v-else>
+                {{ USER_CITY.area_with_type }}
+              </template>
             </a>
             <b-toast id="city-toast" title="Ваш город">
               <b-form @submit.prevent="changeCity">
@@ -205,7 +210,6 @@ export default {
     this.getMenu();
     this.getContacts();
     this.GET_CITY_USER();
-    console.log(this.USER);
   }
 }
 </script>

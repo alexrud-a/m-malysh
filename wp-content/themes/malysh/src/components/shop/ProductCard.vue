@@ -41,6 +41,7 @@
 
 <script>
 import {mapGetters} from "vuex";
+import axios from "axios";
 
 export default {
   name: "ProductCard",
@@ -63,7 +64,7 @@ export default {
   methods: {
     changeWishList() {
       this.$emit('changeWishList', this.product);
-    }
+    },
   }
 }
 </script>

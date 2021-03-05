@@ -27,15 +27,13 @@ export default {
                 console.log(error)
             })
     },
+
     CHANGE_CITY({commit}, city) {
         return axios('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
             method: "POST",
             mode: "cors",
             data: {
                 "query": city,
-                "locations": [{
-                    "city": city
-                }],
             },
             headers: {
                 "Content-Type": "application/json;charset=UTF-8",
@@ -44,16 +42,17 @@ export default {
             },
         })
             .then((response) => {
-                let res = response.data.suggestions.slice();
-                let city = res.slice().filter(item => item.data.city_with_type !== null && item.data.postal_code !== null);
-                commit('SET_USER_CITY', city[0].data);
-                return city
+                let city = response.data.suggestions[0].data;
+                commit('SET_USER_CITY', city);
+                document.cookie = 'location='+JSON.stringify(city)+'; path=/; max-age=86400';
+                return city;
             })
             .catch((error) => {
                 console.log(error)
                 return error;
             })
     },
+
     GET_CITY_USER({commit}) {
         let coords;
         if (navigator.geolocation) {
@@ -96,34 +95,9 @@ export default {
                 },
             })
                 .then((response) => {
-                    let city;
-                    if (response.data.suggestions.slice().filter(item => item.data.city_with_type !== null).length <= 0) {
-                        return axios('https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address', {
-                            method: "POST",
-                            mode: "cors",
-                            data: {
-                                "lat": 51.660781,
-                                "lon": 39.200269,
-                            },
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Accept": "application/json",
-                                "Authorization": "Token " + tokenDadata
-                            },
-                        })
-                            .then((response) => {
-                                city = response.data.suggestions.slice().filter(item => item.data.city_with_type !== null)[0].data;
-                                commit('SET_USER_CITY', city);
-                                return city;
-                            })
-                            .catch(error => {
-                                return error
-                            })
-                    } else {
-                        city = response.data.suggestions.slice().filter(item => item.data.city_with_type !== null)[0].data;
-                        commit('SET_USER_CITY', city);
-                    }
-                    console.log(city);
+                    let city = response.data.suggestions[0].data;
+                    commit('SET_USER_CITY', city);
+                    document.cookie = 'location='+JSON.stringify(city)+'; path=/; max-age=86400';
                     return city;
                 })
                 .catch((error) => {
@@ -132,6 +106,7 @@ export default {
                 })
         }
     },
+
     GET_PRODUCTS({commit}) {
         return WooCommerce.get('products', {
             status: 'publish'

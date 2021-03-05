@@ -135,11 +135,14 @@ export default {
         }
       },
       sortType: 'date',
+      meta: [],
+      metaTitle: '',
     }
   },
   metaInfo() {
     return {
-      title: this.title,
+      title: this.metaTitle,
+      meta: this.meta,
     }
   },
   computed: {
@@ -185,6 +188,8 @@ export default {
           .then((response) => {
             this.title = response.data.title.rendered;
             this.content = response.data.content.rendered;
+            this.meta = response.data.yoast_meta;
+            this.metaTitle = response.data.yoast_title;
           })
           .catch((error) => {
             console.log(error);

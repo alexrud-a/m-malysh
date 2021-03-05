@@ -41,6 +41,11 @@ export default {
       content: [],
     }
   },
+  metaInfo() {
+    return {
+      title: 'Мой малыш - Результаты поиска',
+    }
+  },
   methods: {
     ...mapActions([
       'CHANGE_WISHLIST'

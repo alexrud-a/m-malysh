@@ -128,6 +128,14 @@ export default {
       content: [],
       advantages: [],
       categories: [],
+      meta: [],
+      metaTitle: '',
+    }
+  },
+  metaInfo() {
+    return {
+      title: this.metaTitle,
+      meta: this.meta,
     }
   },
   components: {
@@ -142,6 +150,8 @@ export default {
             this.slider = response.data.acf.slider;
             this.content = response.data.content.rendered;
             this.advantages = response.data.acf.advantages;
+            this.meta = response.data.yoast_meta;
+            this.metaTitle = response.data.yoast_title;
           })
           .catch((error) => {
             console.log(error);

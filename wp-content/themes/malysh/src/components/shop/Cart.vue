@@ -50,7 +50,9 @@
                  :key="product.id"
             >
               <div class="cart-products__td d-table-cell">
-                <img :src="product.images[0].src" :alt="product.images[0].alt" width="120"/>
+                <img v-if="product.images.length" :src="product.images[0].src" :alt="product.images[0].alt"
+                     width="120"/>
+                <img v-else src="/wp-content/plugins/woocommerce/assets/images/placeholder.png" width="120">
               </div>
               <div class="cart-products__td d-table-cell">
                 <div>
@@ -121,12 +123,12 @@
                   >
                     {{ shipping.title }}
                     <span class="shipping-pay">
-                      <template v-if="shipping.pay > 0">
+                      <template v-if="shipping.pay && shipping.pay > 0">
                         {{ shipping.pay | formattedPrice }} ₽
                       </template>
                       <template v-else>
                         <p>
-                          Не удалось рассчитать сумму доставки, заполните данные в форме
+                          {{ shipping.payErr }}
                         </p>
                       </template>
                   </span>
@@ -215,7 +217,7 @@
                   <b-col md="4">
                     <b-form-group>
                       <validation-provider rules="required" v-slot="{ errors }">
-                        <b-input type="text" placeholder="Город" v-model="user.city" @change="changeAddress"/>
+                        <b-input type="text" placeholder="Город" v-model="user.city"/>
                         <span class="error">{{ errors[0] }}</span>
                       </validation-provider>
                     </b-form-group>
@@ -249,7 +251,8 @@
                   <b-col md="4">
                     <b-form-group>
                       <validation-provider rules="required" v-slot="{ errors }">
-                        <b-input type="text" placeholder="+7 (___) ___ - __ - __" v-model="user.tel" v-mask="'+7(###) ### - ## - ##'"/>
+                        <b-input type="text" placeholder="+7 (___) ___ - __ - __" v-model="user.tel"
+                                 v-mask="'+7(###) ### - ## - ##'"/>
                         <span class="error">{{ errors[0] }}</span>
                       </validation-provider>
                     </b-form-group>
@@ -259,16 +262,23 @@
                   <b-col md="4">
                     <b-form-group>
                       <validation-provider rules="required|digits:6" v-slot="{ errors }">
-                        <b-input type="text" placeholder="Индекс" v-model="user.postcode"/>
+                        <b-input type="text" placeholder="Индекс" v-model="user.postcode" @change="changePostCode"/>
                         <span class="error">{{ errors[0] }}</span>
                       </validation-provider>
                     </b-form-group>
                   </b-col>
                 </b-form-row>
                 <b-form-group>
-                  <b-btn type="submit" class="btn btn-blue">
-                    Оформить заказ
-                  </b-btn>
+                  <template v-if="select_shipping.pay && select_shipping.pay > 0">
+                    <b-btn type="submit" class="btn btn-blue">
+                      Оформить заказ
+                    </b-btn>
+                  </template>
+                  <template v-else>
+                    <p>
+                      Выберите актуальный способ доставки
+                    </p>
+                  </template>
                 </b-form-group>
               </b-form-group>
             </b-form>
@@ -285,13 +295,18 @@
           </p>
         </b-col>
       </template>
+      <b-modal id="order-modal" centered hide-footer title="Спасибо!">
+        <h4>
+          Ваш заказ № {{ orderID }} принят
+        </h4>
+      </b-modal>
     </b-row>
   </b-container>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import {tokenDadata, WooCommerce} from "@/consts";
+import {WooCommerce} from "@/consts";
 import {formattedPrice} from "@/utils";
 import Multiselect from 'vue-multiselect';
 import axios from "axios";
@@ -322,7 +337,7 @@ export default {
         flat: '',
         postcode: '',
       },
-      codeToCdek: '',
+      orderID: '',
     }
   },
   components: {Multiselect, ValidationProvider, ValidationObserver},
@@ -340,6 +355,7 @@ export default {
       'CLEAR_CART',
       'INCREMENT_CART_ITEM',
       'DECREMENT_CART_ITEM',
+      'CHANGE_CITY'
     ]),
     cartTotal() {
       let result = [];
@@ -399,67 +415,8 @@ export default {
     decrement(index) {
       this.DECREMENT_CART_ITEM(index);
     },
-    changeAddress() {
-      //при изменении данных адреса собирать все данные и отправлять запрос
-      // дадате на определение города, затем взять из ответа код кладр и
-      // отправить второй запрос на получение id города для сдека и вызвать
-      // метод перерасчета стоимости доставки
-    },
-    getCodeForCdek() {
-      return axios('https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/delivery', {
-        method: "POST",
-        mode: "cors",
-        data: {
-          "query": this.USER_CITY.city_kladr_id,
-        },
-        headers: {
-          "Content-Type": "application/json;charset=UTF-8",
-          "Accept": "application/json;charset=UTF-8",
-          "Authorization": "Token " + tokenDadata
-        },
-      })
-          .then((response) => {
-            console.log(response);
-            this.codeToCdek = response.data.suggestions[0].data.cdek_id;
-            this.getTotalDelivery();
-            return response
-          })
-          .catch((error) => {
-            console.log(error)
-            return error;
-          });
-    },
-    getTotalDelivery() {
-      return axios('/wp-admin/admin-ajax.php', {
-        method: 'POST',
-        data: qs.stringify({
-          action: 'delivery',
-          data: {
-            "sumoc": this.cartTotal(),
-            "from": 394042,
-            "to": this.user.postcode.length ? this.user.postcode : this.USER_CITY.postal_code,
-            "to_cdek": this.codeToCdek,
-            "weight": this.itemsWeight(), //вес в граммах
-          }
-        })
-      })
-          .then(response => {
-            let res = qs.parse(response.data);
-            this.custom_shippings = this.shippings.map(shipping => {
-              shipping.id === 'cdek_shipping' ? shipping.pay = res.cdek.total_sum : '';
-              shipping.id === 'rpaefw_post_calc' ? shipping.pay = res.russianPost.paynds / 100 : '';
-              return shipping;
-            });
-            return res;
-          })
-          .catch(error => {
-            console.log(error);
-            return error;
-          })
-    },
     order() {
-      //проверить тип оплаты если наличкой отправляем заказ, если картой отправляем на оплату, после получения статуса оплаты отправляем заказ
-      const data = {
+      const data_order = {
         payment_method: this.select_payment.id,
         payment_method_title: this.select_payment.title,
         set_paid: false,
@@ -496,21 +453,24 @@ export default {
           {
             method_id: this.select_shipping.id,
             method_title: this.select_shipping.title,
-            total: this.select_shipping.pay
+            total: String(this.select_shipping.pay)
           }
         ]
       };
 
-      WooCommerce.post("orders", data)
-          .then((response) => {
-            console.log(response.data);
-            this.clearCart();
-            //перенаправить клиента на страницу оформленного заказа
-            //this.$router.push()
-          })
-          .catch((error) => {
-            console.log(error.response.data);
-          });
+      if (this.select_shipping.pay && this.select_shipping.pay > 0) {
+        WooCommerce.post("orders", data_order)
+            .then((response) => {
+              console.log(response.data);
+              this.clearCart();
+              this.orderID = response.data.number;
+              this.$bvModal.show('order-modal');
+            })
+            .catch((error) => {
+              console.log(error.response.data);
+            });
+      }
+
     },
     getCountries() {
       WooCommerce.get("data/countries")
@@ -529,11 +489,12 @@ export default {
             this.custom_shippings = this.shippings.map(shipping => {
               shipping.id === 'cdek_shipping' ? shipping.title = 'Доставка курьерской службой CДЭК' : '';
               shipping.id === 'rpaefw_post_calc' ? shipping.title = 'Почта России' : '';
+              shipping.payErr = 'Не удалось рассчитать сумму доставки, заполните адрес';
               return shipping;
             });
             this.custom_shippings = this.custom_shippings.sort((prev, next) => prev.title - next.title);
             this.select_shipping = this.custom_shippings[0];
-            this.getCodeForCdek();
+            this.getPayShippings();
           })
           .catch((error) => {
             console.log(error.response.data);
@@ -549,13 +510,88 @@ export default {
             console.log(error.response.data);
           });
     },
+    getTotalCdek(postCode) {
+      return axios('/wp-admin/admin-ajax.php', {
+        method: 'POST',
+        data: qs.stringify({
+          action: 'delivery_cdek',
+          data: {
+            "sumoc": this.cartTotal(),
+            "to": postCode,
+            "weight": this.itemsWeight(), //вес в граммах
+          }
+        })
+      })
+          .then(response => {
+            let res = qs.parse(response.data);
+            if (res.errors) {
+              this.custom_shippings = this.shippings.map(shipping => {
+                shipping.id === 'cdek_shipping' ? shipping.payErr = res.errors[0].message : '';
+                return shipping;
+              });
+            } else {
+              let result = res.tariff_codes.slice().sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
+              this.custom_shippings = this.shippings.map(shipping => {
+                shipping.id === 'cdek_shipping' ? shipping.pay = result.delivery_sum : '';
+                return shipping;
+              });
+            }
+            return res;
+          })
+          .catch(error => {
+            console.log(error);
+            return error;
+          })
+    },
+    getTotalPost(postCode) {
+      return axios('/wp-admin/admin-ajax.php', {
+        method: 'POST',
+        data: qs.stringify({
+          action: 'delivery_post',
+          data: {
+            "sumoc": this.cartTotal(),
+            "to": postCode,
+            "weight": this.itemsWeight(), //вес в граммах
+          }
+        })
+      })
+          .then(response => {
+            let res = qs.parse(response.data);
+            this.custom_shippings = this.shippings.map(shipping => {
+              shipping.id === 'rpaefw_post_calc' ? shipping.pay = res.paynds / 100 : '';
+              return shipping;
+            });
+            return res;
+          })
+          .catch(error => {
+            console.log(error);
+            return error;
+          })
+    },
+    getPayShippings() {
+      if (this.USER_CITY.postal_code !== null) {
+        this.getTotalPost(this.USER_CITY.postal_code);
+        this.getTotalCdek(this.USER_CITY.postal_code);
+      } else {
+        this.custom_shippings = this.shippings.map(shipping => {
+          shipping.pay = 0;
+          return shipping;
+        });
+      }
+    },
+    changePostCode() {
+      this.getTotalPost(this.user.postcode);
+      this.getTotalCdek(this.user.postcode);
+    }
   },
   mounted() {
     this.cart_data = this.CART;
   },
   watch: {
     USER_CITY: function () {
-      this.getCodeForCdek();
+      if (!this.user.postcode) {
+        this.getPayShippings();
+      }
     }
   },
   created() {
@@ -631,6 +667,8 @@ export default {
       font-weight: $font-weight-bold;
       line-height: 40px;
       width: 100%;
+      display: flex;
+      justify-content: space-between;
 
       &::before {
         border-radius: 50% !important;

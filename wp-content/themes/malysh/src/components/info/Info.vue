@@ -53,11 +53,14 @@ export default {
       title: '',
       content: [],
       tabs: [],
+      meta: [],
+      metaTitle: '',
     }
   },
   metaInfo() {
     return {
-      title: this.title,
+      title: this.metaTitle,
+      meta: this.meta,
     }
   },
   methods: {
@@ -68,7 +71,9 @@ export default {
           .then((response) => {
             this.title = response.data.title.rendered;
             this.content = response.data.content.rendered;
-            this.tabs = response.data.acf.tabs
+            this.tabs = response.data.acf.tabs;
+            this.meta = response.data.yoast_meta;
+            this.metaTitle = response.data.yoast_title;
           })
           .catch((error) => {
             console.log(error);

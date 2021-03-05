@@ -8,7 +8,6 @@ import Shop from "@/components/shop/Shop";
 import Category from "@/components/shop/Category";
 import Product from "@/components/shop/Product";
 import Wishlist from "@/components/shop/Wishlist";
-import Checkout from "@/components/shop/Checkout";
 import Search from "@/components/search/Search";
 import NotFound from "@/components/404/NotFound";
 import Cart from "@/components/shop/Cart";
@@ -65,11 +64,6 @@ let router = new Router({
             path: '/cart',
             name: 'Cart',
             component: Cart
-        },
-        {
-            path: '/checkout',
-            name: 'Checkout',
-            component: Checkout
         },
         {
             path: '/search',

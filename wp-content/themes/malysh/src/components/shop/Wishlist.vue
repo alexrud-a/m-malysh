@@ -48,6 +48,11 @@ export default {
       wishlist_data: []
     }
   },
+  metaInfo() {
+    return {
+      title: 'Мой малыш - Избранное',
+    }
+  },
   components: {ProductCard},
   methods: {
     ...mapActions([
