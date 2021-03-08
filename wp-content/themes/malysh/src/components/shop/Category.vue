@@ -2,7 +2,7 @@
   <b-container>
     <b-row>
       <b-col sm="12">
-        <b-breadcrumb>
+        <b-breadcrumb v-if="category">
           <b-breadcrumb-item href="/">
             Главная
           </b-breadcrumb-item>
@@ -285,17 +285,18 @@ export default {
                 this.category = response.data.slice().filter(cat => cat.slug === this.$route.params.slug)[0];
                 this.filters.categories = response.data.slice().filter(cat => cat.parent === this.category.id);
               }
-            });
-        this.GET_PRODUCTS()
-            .then((response) => {
-              if (response.data) {
-                this.sourcedProducts = response.data.slice().filter(product => contains(product.categories, [this.category.id], 'id')).sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
-                this.products = this.sourcedProducts.slice();
-                this.filters.price.min = Math.min(...this.products.slice().map(product => product.price));
-                this.filters.price.max = Math.max(...this.products.slice().map(product => product.price));
-                this.filters.selected_price.min = Math.min(...this.products.slice().map(product => product.price));
-                this.filters.selected_price.max = Math.max(...this.products.slice().map(product => product.price));
-              }
+
+              this.GET_PRODUCTS()
+                  .then((response) => {
+                    if (response.data) {
+                      this.sourcedProducts = response.data.slice().filter(product => contains(product.categories, [this.category.id], 'id')).sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
+                      this.products = this.sourcedProducts.slice();
+                      this.filters.price.min = Math.min(...this.products.slice().map(product => product.price));
+                      this.filters.price.max = Math.max(...this.products.slice().map(product => product.price));
+                      this.filters.selected_price.min = Math.min(...this.products.slice().map(product => product.price));
+                      this.filters.selected_price.max = Math.max(...this.products.slice().map(product => product.price));
+                    }
+                  });
             });
       }
     }
@@ -305,19 +306,22 @@ export default {
         .then((response) => {
           if (response.data) {
             this.category = response.data.slice().filter(cat => cat.slug === this.$route.params.slug)[0];
-            this.filters.categories = response.data.slice().filter(cat => cat.parent === this.category.id);
+            if(response.data.slice().filter(cat => cat.parent === this.category.id).length) {
+              this.filters.categories = response.data.slice().filter(cat => cat.parent === this.category.id);
+            }
           }
-        });
-    this.GET_PRODUCTS()
-        .then((response) => {
-          if (response.data) {
-            this.sourcedProducts = response.data.slice().filter(product => contains(product.categories, [this.category.id], 'id')).sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
-            this.products = this.sourcedProducts.slice();
-            this.filters.price.min = Math.min(...this.products.slice().map(product => product.price));
-            this.filters.price.max = Math.max(...this.products.slice().map(product => product.price));
-            this.filters.selected_price.min = Math.min(...this.products.slice().map(product => product.price));
-            this.filters.selected_price.max = Math.max(...this.products.slice().map(product => product.price));
-          }
+
+          this.GET_PRODUCTS()
+              .then((response) => {
+                if (response.data) {
+                  this.sourcedProducts = response.data.slice().filter(product => contains(product.categories, [this.category.id], 'id')).sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
+                  this.products = this.sourcedProducts.slice();
+                  this.filters.price.min = Math.min(...this.products.slice().map(product => product.price));
+                  this.filters.price.max = Math.max(...this.products.slice().map(product => product.price));
+                  this.filters.selected_price.min = Math.min(...this.products.slice().map(product => product.price));
+                  this.filters.selected_price.max = Math.max(...this.products.slice().map(product => product.price));
+                }
+              });
         });
     this.GET_SUBCATEGORIES()
         .then((response) => {

@@ -58,9 +58,12 @@
         </b-col>
         <b-col md="4" class="text-center">
           <router-link :to="{name: 'Home'}">
-            <img :src="siteInfo.logo"
-                 class="img-fluid mb-2"
-            />
+            <picture>
+              <source media="(min-width: 768px)" :srcset="siteInfo.logo">
+              <img :src="siteInfo.logoMin"
+                   class="img-fluid mb-2"
+              />
+            </picture>
           </router-link>
           <p class="header__desc mb-0">
             {{ siteInfo.desc }}

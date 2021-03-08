@@ -142,21 +142,9 @@ export default {
     VueAgile,
   },
   methods: {
-    getContent() {
-      return axios('https://m-malysh.ru/wp-json/wp/v2/pages/35', {
-        method: "GET"
-      })
-          .then((response) => {
-            this.slider = response.data.acf.slider;
-            this.content = response.data.content.rendered;
-            this.advantages = response.data.acf.advantages;
-            this.meta = response.data.yoast_meta;
-            this.metaTitle = response.data.yoast_title;
-          })
-          .catch((error) => {
-            console.log(error);
-            return error;
-          })
+    getDataPage() {
+      this.getCategory();
+      this.getContent();
     },
     getCategory() {
       WooCommerce.get('products/categories', {
@@ -173,11 +161,26 @@ export default {
             console.log(error);
             return error;
           })
-    }
+    },
+    getContent() {
+      return axios('https://m-malysh.ru/wp-json/wp/v2/pages/35', {
+        method: "GET"
+      })
+          .then((response) => {
+            this.slider = response.data.acf.slider;
+            this.content = response.data.content.rendered;
+            this.advantages = response.data.acf.advantages;
+            this.meta = response.data.yoast_meta;
+            this.metaTitle = response.data.yoast_title;
+          })
+          .catch((error) => {
+            console.log(error);
+            return error;
+          })
+    },
   },
   created() {
-    this.getContent();
-    this.getCategory();
+    this.getDataPage();
   }
 }
 </script>

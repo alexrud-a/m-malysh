@@ -93,18 +93,48 @@ if (!function_exists('malysh_setup')) :
          *
          * @link https://codex.wordpress.org/Theme_Logo
          */
-        add_theme_support(
-            'custom-logo',
-            array(
-                'height' => 250,
-                'width' => 250,
-                'flex-width' => true,
-                'flex-height' => true,
-            )
-        );
+//        add_theme_support(
+//            'custom-logo',
+//            array(
+//                'height' => 250,
+//                'width' => 250,
+//                'flex-width' => true,
+//                'flex-height' => true,
+//            )
+//        );
     }
 endif;
 add_action('after_setup_theme', 'malysh_setup');
+
+add_action( 'customize_register', 'custom_logo_uploader' );
+function custom_logo_uploader($wp_customize) {
+
+    $wp_customize->add_section( 'upload_custom_logo', array(
+        'title'          => 'Логотип',
+        'description'    => 'Установить логотип',
+        'priority'       => 25,
+    ) );
+
+    $wp_customize->add_setting( 'custom_logo', array(
+        'default'        => '',
+    ) );
+
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'custom_logo', array(
+        'label'   => 'Логотип',
+        'section' => 'upload_custom_logo',
+        'settings'   => 'custom_logo',
+    ) ) );
+
+    $wp_customize->add_setting( 'custom_logo2', array(
+        'default'        => '',
+    ) );
+
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'custom_logo2', array(
+        'label'   => 'Логотип (для мобтльной версии)',
+        'section' => 'upload_custom_logo', // put the name of whatever section you want to add your settings
+        'settings'   => 'custom_logo2',
+    ) ) );
+}
 
 /**
  * Set the content width in pixels, based on the theme's design and stylesheet.
