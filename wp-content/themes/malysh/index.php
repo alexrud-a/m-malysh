@@ -26,7 +26,7 @@
     <script>
         var siteInfo = {
             logo: '<?= wp_get_attachment_image_src(get_theme_mod('custom_logo'), 'full')[0]; ?>',
-            logoMin: '<?= wp_get_attachment_image_src(get_theme_mod('custom_logo2'), 'full')[0]; ?>'
+            logoMin: '<?= get_theme_mod('custom_logo2') ?>',
             name: '<?= bloginfo('name');?>',
             desc: '<?= bloginfo('description');?>'
         }
