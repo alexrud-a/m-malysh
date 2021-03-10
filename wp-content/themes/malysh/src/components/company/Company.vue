@@ -11,7 +11,7 @@
           </b-breadcrumb-item>
         </b-breadcrumb>
       </b-col>
-      <b-col xl="7" lg="8" md="12">
+      <b-col xl="7" lg="8" md="12" class="mb-5">
         <h1>
           {{ title }}
         </h1>

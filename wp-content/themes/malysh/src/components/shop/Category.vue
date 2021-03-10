@@ -72,8 +72,8 @@
           </b-container>
           <b-container class="p-0 mb-5" v-if="products.length">
             <b-row>
-              <b-col md="4"
-                     sm="6"
+              <b-col md="6"
+                     lg="4"
                      v-for="product in filtered"
                      :key="product.id"
               >

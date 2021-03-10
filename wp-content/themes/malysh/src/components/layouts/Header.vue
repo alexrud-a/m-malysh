@@ -5,7 +5,8 @@
     <div class="header__top">
       <b-container>
         <b-row>
-          <b-col md="8"
+          <b-col lg="8"
+                 md="6"
                  class="text-right"
           >
             <a href="#"
@@ -34,7 +35,8 @@
               </b-form>
             </b-toast>
           </b-col>
-          <b-col md="4"
+          <b-col lg="4"
+                 md="6"
                  class="text-right"
           >
           <span>
@@ -46,7 +48,7 @@
     </div>
     <b-container class="pt-2 pb-2">
       <b-row class="align-items-center">
-        <b-col md="4">
+        <b-col md="4" class="w-sm-60">
           <p class="header__slogan mb-0">
             Есть вопросы? - Позвони
           </p>
@@ -56,7 +58,7 @@
             {{ contacts.phone }}
           </a>
         </b-col>
-        <b-col md="4" class="text-center">
+        <b-col md="4" class="text-right text-md-center d-none d-sm-block">
           <router-link :to="{name: 'Home'}">
             <picture>
               <source media="(min-width: 768px)" :srcset="siteInfo.logo">
@@ -65,12 +67,19 @@
               />
             </picture>
           </router-link>
-          <p class="header__desc mb-0">
+          <p class="header__desc mb-0 d-md-block d-none">
             {{ siteInfo.desc }}
           </p>
         </b-col>
+        <b-col md="4" class="d-flex d-xl-none justify-content-end w-sm-40">
+          <div class="menu-toggle" :class="{'menu-toggle--active' : isOpen}" @click="toggleMenu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </b-col>
         <b-col md="4"
-               class="d-flex align-items-center justify-content-between"
+               class="d-xl-flex align-items-center justify-content-between d-none"
         >
           <b-form class="header__search-form"
                   @submit.prevent="searching"
@@ -125,8 +134,62 @@
         </b-col>
       </b-row>
     </b-container>
-    <b-container>
-      <b-nav class="border-top border-bottom border-gray header__menu justify-content-around">
+    <b-container class="d-xl-block header__menu-wrap" :class="{'header__menu-wrap--active' : isOpen}">
+      <div class="d-xl-none d-flex flex-column w-100 p-3">
+        <router-link :to="{name: 'Home'}" @click.native="toggleMenu">
+          <picture>
+            <source media="(min-width: 768px)" :srcset="siteInfo.logo">
+            <img :src="siteInfo.logoMin"
+                 class="img-fluid mb-2"
+            />
+          </picture>
+        </router-link>
+        <router-link :to="{name: 'Wishlist', params: {wishlist_data: WISHLIST}}"
+                     class="header__wishlist d-block mb-3"
+                     :class="{'header__wishlist--add' : WISHLIST.length}"
+                     @click.native="toggleMenu"
+        >
+          <svg width="25" height="25" v-if="WISHLIST.length">
+            <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like-add"/>
+          </svg>
+          <svg width="25" height="25" v-else>
+            <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#like"/>
+          </svg>
+          <span>
+            Избранное
+          </span>
+        </router-link>
+        <router-link class="header__cart d-block mb-3" @click.native="toggleMenu"
+                     :to="{name: 'Cart', params: {cart_data: CART}}">
+          <svg width="25" height="25">
+            <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#shopping-bag"/>
+          </svg>
+          <span class="header__cart-count" v-if="CART.length">
+            {{ CART.reduce((s, i) => s = s + i.quantity, 0) }}
+          </span>
+          <span>
+            Корзина
+          </span>
+        </router-link>
+        <router-link :to="{name: 'Profile'}" v-if="USER.ID" class="header__user d-block mb-3" @click.native="toggleMenu">
+          <svg width="25" height="25">
+            <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#user"/>
+          </svg>
+          <span>
+            Личный кабинет
+          </span>
+        </router-link>
+        <b-link v-else v-b-modal.authorization class="header__user d-block mb-3">
+          <svg width="25" height="25">
+            <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#user"/>
+          </svg>
+          <span>
+            Войти
+          </span>
+        </b-link>
+      </div>
+
+      <b-nav class="border-top border-bottom border-gray header__menu justify-content-start justify-content-xl-around">
         <li class="nav-item header__menu-item"
             v-for="(link, ind) in this.menu"
             :key="ind"
@@ -134,6 +197,7 @@
           <router-link
               :to="link.url"
               class="nav-link"
+              @click.native="toggleMenu"
           >
             {{ link.title }}
           </router-link>
@@ -158,6 +222,7 @@ export default {
       contacts: [],
       searchVal: '',
       city: '',
+      isOpen: false,
     }
   },
   computed: {
@@ -173,6 +238,9 @@ export default {
       'GET_CITY_USER',
       'CHANGE_CITY',
     ]),
+    toggleMenu() {
+      this.isOpen = !this.isOpen;
+    },
     changeCity() {
       this.CHANGE_CITY(this.city);
       this.city = '';
@@ -272,7 +340,11 @@ export default {
   }
 
   &__menu {
-    text-align: center;
+    text-align: left;
+
+    @media screen and (min-width: 1200px) {
+      text-align: center;
+    }
 
     &-item {
       a {
@@ -312,38 +384,137 @@ export default {
     position: relative;
     margin-right: 12px;
 
+    span {
+      color: #000;
+      margin-left: 15px;
+    }
+
     &-count {
       position: absolute;
       bottom: -12px;
-      right: -12px;
+      left: -3px;
       width: 23px;
       height: 23px;
       border-radius: 50%;
       background: #0abab5;
-      color: #fff;
+      color: #fff!important;
       display: flex;
       justify-content: center;
       align-items: center;
       font-size: 12px;
     }
+
+    &:hover {
+      text-decoration: none;
+      color: $blue;
+    }
   }
 
   &__wishlist {
+
+    span {
+      color: #000;
+      margin-left: 15px;
+    }
+
     &--add {
+      svg {
+        fill: $blue;
+      }
+    }
+
+    &:hover {
+      text-decoration: none;
+      color: $blue;
+    }
+  }
+
+  &__user {
+    span {
+      color: #000;
+      margin-left: 15px;
+    }
+
+    svg {
+      fill: #000;
+    }
+
+    &:hover {
+      text-decoration: none;
+      color: $blue;
+
       svg {
         fill: $blue;
       }
     }
   }
 
-  &__user {
-    svg {
-      fill: #000;
+  .menu-toggle {
+    background-color: #303030;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    cursor: pointer;
+
+    span {
+      position: absolute;
+      width: calc(100% - 20px);
+      height: 1px;
+      background-color: #fff;
+      left: 10px;
+      right: 10px;
+      transition: $transition-base;
+
+      &:first-child {
+        top: 12px;
+      }
+
+      &:nth-child(2) {
+        top: calc(50% - 1px);
+      }
+
+      &:last-child {
+        bottom: 12px;
+      }
     }
 
-    &:hover {
-      svg {
-        fill: $blue;
+    &--active {
+      span {
+        &:first-child {
+          top: calc(50% - 1px);
+          transform: rotate(45deg);
+        }
+
+        &:nth-child(2) {
+          opacity: 0;
+        }
+
+        &:last-child {
+          bottom: calc(50% - 1px);
+          transform: rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  &__menu-wrap {
+    @media screen and (max-width: 1200px) {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: -100%;
+      width: 100%;
+      max-width: 250px!important;
+      transition: $transition-base;
+      z-index: 99;
+      background-color: #efefef;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      &--active {
+        left: 0;
       }
     }
   }

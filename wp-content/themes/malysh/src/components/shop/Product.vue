@@ -163,7 +163,7 @@
           Рекомендуем
         </h2>
       </b-col>
-      <b-col md="3" sm="6"
+      <b-col lg="3" md="6"
              v-for="feature in featured"
              :key="feature.id">
         <ProductCard :product="feature" @changeWishlist="changeWishlist(feature)"/>
@@ -244,7 +244,7 @@ export default {
       'GET_PRODUCTS'
     ]),
     addCart() {
-      if (this.product.attributes.length) {
+      if (this.product.type === 'variable' && this.product.attributes.length) {
         this.product.variation_id = this.currentVariation.id;
         this.product.current = this.currentVariation;
       }
@@ -309,7 +309,7 @@ export default {
           if (response.data) {
             this.product = response.data.filter(item => item.slug === this.$route.params.slug)[0];
             this.featured = response.data.filter(item => this.product.related_ids.findIndex(el => item.id === el) !== -1 ? true : false).slice(0, 3);
-            if (this.product.attributes.length) {
+            if (this.product.type === 'variable' && this.product.attributes.length) {
               this.variationsOption[2] = this.product.attributes[1].options[0];
               this.variationsOption[3] = this.product.attributes[2].options[0];
               this.variationsOption[4] = this.product.attributes[3].options[0];

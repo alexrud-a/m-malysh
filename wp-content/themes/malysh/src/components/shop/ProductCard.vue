@@ -24,7 +24,9 @@
     >
       {{ product.name }}
     </router-link>
-    <div class="product-card__price" v-html="product.price_html"></div>
+    <div class="product-card__price"
+         v-html="product.price_html">
+    </div>
     <b-btn class="product-card__wishlist"
            :class="{'product-card__wishlist--add' : isWishList}"
            @click="changeWishList"
@@ -41,6 +43,7 @@
 
 <script>
 import {mapGetters} from "vuex";
+import {formattedPrice} from "@/utils";
 
 export default {
   name: "ProductCard",
@@ -52,13 +55,17 @@ export default {
       }
     }
   },
+  filters: {
+    formattedPrice
+  },
   computed: {
     ...mapGetters([
-      'WISHLIST'
+      'WISHLIST',
+      'USER'
     ]),
     isWishList() {
       return [...this.WISHLIST].find(item => item.id === this.product.id) !== undefined ? true : false;
-    }
+    },
   },
   methods: {
     changeWishList() {

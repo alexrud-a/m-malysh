@@ -76,9 +76,10 @@ export default {
     getHistoryOrders() {
       WooCommerce.get("orders", {
         per_page: 100,
+        customer: this.USER.ID,
       })
           .then((response) => {
-            this.orders = response.data.filter(order => order.billing.email === this.USER.data.user_email);
+            this.orders = response.data;
             this.orders.map(order => {
               order.date_created = dayjs(order.date_created).format("DD.MM.YYYY");
               order.total = order.total + ' ₽';

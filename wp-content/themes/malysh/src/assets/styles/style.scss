@@ -89,6 +89,24 @@ a:hover {
   }
 }
 
+.w-sm-50 {
+  @media screen and (max-width: 576px){
+    width: 50% !important;
+  }
+}
+
+.w-sm-60 {
+  @media screen and (max-width: 576px){
+    width: 60% !important;
+  }
+}
+
+.w-sm-40 {
+  @media screen and (max-width: 576px){
+    width: 40% !important;
+  }
+}
+
 .color-gray {
   color: $gray;
 }
@@ -280,8 +298,12 @@ h1, h2, h3, h4, h5, h6 {
 
   &__item {
     text-align: center;
-    min-width: 200px;
+    min-width: 160px;
     margin-bottom: 20px;
+
+    @media screen and (min-width: 768px) {
+      min-width: 200px;
+    }
   }
 
   &__text {

@@ -63,28 +63,28 @@
               Мы в INSTAGRAM
             </h3>
             <b-row>
-              <b-col md="3" class="mb-2">
+              <b-col lg="3" md="4" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col md="3" class="mb-2">
+              <b-col lg="3" md="4" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col md="3" class="mb-2">
+              <b-col lg="3" md="4" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col md="3" class="mb-2">
+              <b-col lg="3" md="4" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col md="3" class="mb-2">
+              <b-col lg="3" md="4" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col md="3" class="mb-2">
+              <b-col lg="3" md="4" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col md="3" class="mb-2">
+              <b-col lg="3" md="4" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col md="3" class="mb-2">
+              <b-col lg="3" md="4" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
             </b-row>
