@@ -73,10 +73,7 @@
 <!--          <span class="product__price"-->
 <!--                v-if="currentVariation && currentVariation.price">{{ currentVariation.price | formattedPrice }} ₽</span>-->
 <!--          <span class="product__price" v-else v-html="product.price_html"></span>-->
-          <template v-if="product.type === 'variable' && currentVariation">
-            <span class="product__price" v-html="price()"></span>
-          </template>
-          <template v-else>
+          <template v-if="product">
             <span class="product__price" v-html="price()"></span>
           </template>
           <span class="sup"> | </span>
@@ -264,11 +261,11 @@ export default {
     },
     changeVariation() {
       this.currentVariation = this.variations.slice().filter(item => {
-        return item.attributes.findIndex(attr => attr['option'] === this.variationsOption[2]) !== -1 ? true : false
+        return item.attributes.findIndex(attr => attr['option'] === this.variationsOption[2]) !== -1
       }).filter(item => {
-        return item.attributes.findIndex(attr => attr['option'] === this.variationsOption[3]) !== -1 ? true : false
+        return item.attributes.findIndex(attr => attr['option'] === this.variationsOption[3]) !== -1
       }).filter(item => {
-        return item.attributes.findIndex(attr => attr['option'] === this.variationsOption[4]) !== -1 ? true : false
+        return item.attributes.findIndex(attr => attr['option'] === this.variationsOption[4]) !== -1
       })[0];
     },
     getVariations() {
@@ -307,7 +304,11 @@ export default {
         }
 
       } else {
-        price = this.product.price_html;
+        if (this.product.type === 'variable' && this.currentVariation) {
+          price = formattedPrice(this.currentVariation.price) + ' ₽';
+        } else {
+          price = this.product.price_html;
+        }
       }
 
       return price
@@ -344,11 +345,11 @@ export default {
         .then((response) => {
           if (response.data) {
             this.product = response.data.filter(item => item.slug === this.$route.params.slug)[0];
-            this.featured = response.data.filter(item => this.product.related_ids.findIndex(el => item.id === el) !== -1 ? true : false).slice(0, 3);
-            if (response.data.filter(item => item.slug === this.$route.params.slug)[0].type === 'variable' && response.data.filter(item => item.slug === this.$route.params.slug)[0].attributes) {
-              this.variationsOption[2] = response.data.filter(item => item.slug === this.$route.params.slug)[0].attributes[1].options[0];
-              this.variationsOption[3] = response.data.filter(item => item.slug === this.$route.params.slug)[0].attributes[2].options[0];
-              this.variationsOption[4] = response.data.filter(item => item.slug === this.$route.params.slug)[0].attributes[3].options[0];
+            this.featured = response.data.filter(item => this.product.related_ids.findIndex(el => item.id === el) !== -1).slice(0, 3);
+            if (this.product.type === 'variable' && this.product.attributes) {
+              this.variationsOption[2] = this.product.attributes[1].options[0];
+              this.variationsOption[3] = this.product.attributes[2].options[0];
+              this.variationsOption[4] = this.product.attributes[3].options[0];
               this.getVariations();
             }
           }

@@ -87,8 +87,8 @@
                   </template>
                 </div>
                 <div class="cart-products__td d-table-cell">
-                  <template v-if="USER.ID && product.current && product.current.meta_data.findIndex(item => item.key === '') !== -1">
-                    {{product.current.meta_data.find(item => item.key === '').value | formattedPrice }} ₽
+                  <template v-if="(USER.ID && USER.roles.findIndex(role => role === 'opt_customer') !== -1) && (product.current && product.current.meta_data.findIndex(item => item.key === 'wholesale_customer_wholesale_price') !== -1)">
+                    {{product.current.meta_data.find(item => item.key === 'wholesale_customer_wholesale_price').value | formattedPrice }} ₽
                   </template>
                   <template v-else-if="product.current">
                     {{ product.current.price | formattedPrice }} ₽
@@ -105,7 +105,10 @@
                   <span class="cart-item__qty-btn" @click="decrement(index)">-</span>
                 </div>
                 <div class="cart-products__td d-table-cell">
-                  <template v-if="product.current">
+                  <template v-if="(USER.ID && USER.roles.findIndex(role => role === 'opt_customer') !== -1) && (product.current && product.current.meta_data.findIndex(item => item.key === 'wholesale_customer_wholesale_price') !== -1)">
+                    {{product.current.meta_data.find(item => item.key === 'wholesale_customer_wholesale_price').value * product.quantity | formattedPrice }} ₽
+                  </template>
+                  <template v-else-if="product.current">
                     {{ product.current.price * product.quantity | formattedPrice }}
                   </template>
                   <template v-else>
@@ -397,7 +400,7 @@ export default {
         for (let item of this.cart_data) {
           if (this.USER.ID && this.USER.roles.findIndex(role => role === 'opt_customer') !== -1) {
             if (item.current && item.current.meta_data.find(item => item.key === 'wholesale_customer_wholesale_price')) {
-              price = item.current.price.meta_data.find(item => item.key === 'wholesale_customer_wholesale_price').value;
+              price = item.current.meta_data.find(item => item.key === 'wholesale_customer_wholesale_price').value;
             } else if (item.current && item.current.price) {
               price = item.current.price;
             } else {
