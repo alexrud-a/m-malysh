@@ -25,7 +25,7 @@
       {{ product.name }}
     </router-link>
     <div class="product-card__price"
-         v-html="product.price_html">
+         v-html="price()">
     </div>
     <b-btn class="product-card__wishlist"
            :class="{'product-card__wishlist--add' : isWishList}"
@@ -44,6 +44,7 @@
 <script>
 import {mapGetters} from "vuex";
 import {formattedPrice} from "@/utils";
+import {WooCommerce} from "@/consts";
 
 export default {
   name: "ProductCard",
@@ -53,6 +54,11 @@ export default {
       default() {
         return {}
       }
+    }
+  },
+  data() {
+    return {
+      variations: []
     }
   },
   filters: {
@@ -71,6 +77,53 @@ export default {
     changeWishList() {
       this.$emit('changeWishList', this.product);
     },
+    price() {
+      let price;
+      if (this.USER.ID && this.USER.roles.findIndex(role => role === 'opt_customer') !== -1) {
+        if (this.product.type === 'variable') {
+          if(this.product.meta_data.findIndex(item => item.key === 'wholesale_customer_variations_with_wholesale_price') !== -1) {
+            let priceMin = Math.min(...this.variations.slice().map(product => product.meta_data.filter(meta => meta.key === 'wholesale_customer_wholesale_price')[0].value));
+            let priceMax = Math.max(...this.variations.slice().map(product => product.meta_data.filter(meta => meta.key === 'wholesale_customer_wholesale_price')[0].value));
+            if (priceMin && priceMax) {
+              if(priceMin !== priceMax) {
+                price = formattedPrice(priceMin) + ' ₽ – ' + formattedPrice(priceMax)+ ' ₽';
+              } else {
+                price = formattedPrice(priceMin) + ' ₽';
+              }
+            }
+          } else {
+            price = this.product.price_html;
+          }
+        } else {
+          if (this.product.meta_data.findIndex(item => item.key === 'wholesale_customer_wholesale_price') !== -1) {
+            price = formattedPrice(
+                this.product.meta_data
+                    .filter(item => item.key === 'wholesale_customer_wholesale_price')[0].value
+            ) + ' ₽';
+          } else {
+            price = this.product.price_html;
+          }
+        }
+
+      } else {
+        price = this.product.price_html;
+      }
+
+      return price
+    }
+  },
+  created() {
+    if(this.product.type === 'variable') {
+      WooCommerce.get('products/' + this.product.id + '/variations')
+          .then((response) => {
+            this.variations = response.data;
+            return response;
+          })
+          .catch((error) => {
+            console.log(error);
+            return error;
+          });
+    }
   }
 }
 </script>

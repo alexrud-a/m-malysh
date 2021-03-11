@@ -87,7 +87,10 @@
                   </template>
                 </div>
                 <div class="cart-products__td d-table-cell">
-                  <template v-if="product.current">
+                  <template v-if="USER.ID && product.current && product.current.meta_data.findIndex(item => item.key === '') !== -1">
+                    {{product.current.meta_data.find(item => item.key === '').value | formattedPrice }} ₽
+                  </template>
+                  <template v-else-if="product.current">
                     {{ product.current.price | formattedPrice }} ₽
                   </template>
                   <template v-else>
@@ -392,10 +395,20 @@ export default {
 
       if (this.cart_data.length) {
         for (let item of this.cart_data) {
-          if (item.current && item.current.price) {
-            price = item.current.price
+          if (this.USER.ID && this.USER.roles.findIndex(role => role === 'opt_customer') !== -1) {
+            if (item.current && item.current.meta_data.find(item => item.key === 'wholesale_customer_wholesale_price')) {
+              price = item.current.price.meta_data.find(item => item.key === 'wholesale_customer_wholesale_price').value;
+            } else if (item.current && item.current.price) {
+              price = item.current.price;
+            } else {
+              price = item.price;
+            }
           } else {
-            price = item.price
+            if (item.current && item.current.price) {
+              price = item.current.price;
+            } else {
+              price = item.price;
+            }
           }
 
           result.push(price * item.quantity)

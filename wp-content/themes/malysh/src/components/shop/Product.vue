@@ -1,6 +1,6 @@
 <template>
   <b-container class="product mb-5">
-    <b-row v-if="Object.keys(product).length !== 0">
+    <b-row v-if="product && Object.keys(product).length !== 0">
       <b-col sm="12">
         <b-breadcrumb>
           <b-breadcrumb-item href="/">
@@ -70,9 +70,15 @@
           {{ product.name }}
         </h1>
         <div class="product__variations">
-          <span class="product__price"
-                v-if="currentVariation && currentVariation.price">{{ currentVariation.price | formattedPrice }} ₽</span>
-          <span class="product__price" v-else v-html="product.price_html"></span>
+<!--          <span class="product__price"-->
+<!--                v-if="currentVariation && currentVariation.price">{{ currentVariation.price | formattedPrice }} ₽</span>-->
+<!--          <span class="product__price" v-else v-html="product.price_html"></span>-->
+          <template v-if="product.type === 'variable' && currentVariation">
+            <span class="product__price" v-html="price()"></span>
+          </template>
+          <template v-else>
+            <span class="product__price" v-html="price()"></span>
+          </template>
           <span class="sup"> | </span>
           <span :class="product.stock_quantity === 'instock' ? 'color-l-gray' : ''">В наличии</span>
           <span class="sup"> | </span>
@@ -231,7 +237,7 @@ export default {
   },
   metaInfo() {
     return {
-      title: 'Мой малыш - ' + this.product.name,
+      title: 'Мой малыш - Товары',
     }
   },
   filters: {
@@ -277,10 +283,40 @@ export default {
             return error;
           });
     },
+    price() {
+      let price;
+      if (this.USER.ID && this.USER.roles.findIndex(role => role === 'opt_customer') !== -1) {
+        if (this.product.type === 'variable') {
+          if (this.currentVariation.meta_data && this.currentVariation.meta_data.findIndex(item => item.key === 'wholesale_customer_wholesale_price') !== -1) {
+            price = formattedPrice(
+                this.currentVariation.meta_data
+                    .filter(item => item.key === 'wholesale_customer_wholesale_price')[0].value
+            ) + ' ₽';
+          } else {
+            price = this.currentVariation.price_html;
+          }
+        } else {
+          if (this.product.meta_data && this.product.meta_data.findIndex(item => item.key === 'wholesale_customer_wholesale_price') !== -1) {
+            price = formattedPrice(
+                this.product.meta_data
+                    .filter(item => item.key === 'wholesale_customer_wholesale_price')[0].value
+            ) + ' ₽';
+          } else {
+            price = this.product.price_html;
+          }
+        }
+
+      } else {
+        price = this.product.price_html;
+      }
+
+      return price
+    }
   },
   computed: {
     ...mapGetters([
       'PRODUCTS',
+      'USER'
     ]),
     sortedBreadcrumbsCat() {
       return this.product.categories.slice().sort((a, b) => a.id - b.id);
@@ -309,10 +345,10 @@ export default {
           if (response.data) {
             this.product = response.data.filter(item => item.slug === this.$route.params.slug)[0];
             this.featured = response.data.filter(item => this.product.related_ids.findIndex(el => item.id === el) !== -1 ? true : false).slice(0, 3);
-            if (this.product.type === 'variable' && this.product.attributes.length) {
-              this.variationsOption[2] = this.product.attributes[1].options[0];
-              this.variationsOption[3] = this.product.attributes[2].options[0];
-              this.variationsOption[4] = this.product.attributes[3].options[0];
+            if (response.data.filter(item => item.slug === this.$route.params.slug)[0].type === 'variable' && response.data.filter(item => item.slug === this.$route.params.slug)[0].attributes) {
+              this.variationsOption[2] = response.data.filter(item => item.slug === this.$route.params.slug)[0].attributes[1].options[0];
+              this.variationsOption[3] = response.data.filter(item => item.slug === this.$route.params.slug)[0].attributes[2].options[0];
+              this.variationsOption[4] = response.data.filter(item => item.slug === this.$route.params.slug)[0].attributes[3].options[0];
               this.getVariations();
             }
           }
