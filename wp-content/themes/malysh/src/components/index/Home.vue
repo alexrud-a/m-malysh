@@ -142,17 +142,14 @@ export default {
     VueAgile,
   },
   methods: {
-    getDataPage() {
-      this.getCategory();
-      this.getContent();
-    },
     getCategory() {
       WooCommerce.get('products/categories', {
         per_page: 3,
+        include: [66, 55, 47],
         exclude: 16,
         hide_empty: true,
         parent: 0,
-        orderby: 'count'
+        orderby: 'include'
       })
           .then((response) => {
             this.categories = response.data;
@@ -180,7 +177,11 @@ export default {
     },
   },
   created() {
-    this.getDataPage();
+    this.$emit('loaded', false);
+    axios.all([this.getCategory(), this.getContent()])
+        .then(() => {
+          this.$emit('loaded', true)
+        });
   }
 }
 </script>

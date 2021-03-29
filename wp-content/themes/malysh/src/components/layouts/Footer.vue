@@ -63,28 +63,28 @@
               Мы в INSTAGRAM
             </h3>
             <b-row>
-              <b-col lg="3" md="4" class="mb-2 w-sm-50">
+              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col lg="3" md="4" class="mb-2 w-sm-50">
+              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col lg="3" md="4" class="mb-2 w-sm-50">
+              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col lg="3" md="4" class="mb-2 w-sm-50">
+              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col lg="3" md="4" class="mb-2 w-sm-50">
+              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col lg="3" md="4" class="mb-2 w-sm-50">
+              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col lg="3" md="4" class="mb-2 w-sm-50">
+              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
-              <b-col lg="3" md="4" class="mb-2 w-sm-50">
+              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
                 <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
               </b-col>
             </b-row>
@@ -186,11 +186,20 @@ export default {
   }
 
   &__menu {
+
+    @media screen and (max-width: 768px) {
+      margin: 20px 0;
+    }
+
     &-item {
       padding: 0;
 
       a {
         color: #000;
+
+        @media screen and (max-width: 768px) {
+          padding: .5rem 0;
+        }
 
         &:hover,
         .router-link-active {

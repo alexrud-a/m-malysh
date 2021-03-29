@@ -326,12 +326,14 @@ export default {
   watch: {
     $route(to, from) {
       if (from.path !== to.path) {
+        this.$emit('loaded', false);
         this.GET_PRODUCTS()
             .then((response) => {
               if (response.data) {
                 this.product = response.data.filter(item => item.slug === this.$route.params.slug)[0];
                 this.featured = response.data.filter(item => item.featured).slice(0, 4);
               }
+              this.$emit('loaded', true);
             });
       }
     }
@@ -341,6 +343,7 @@ export default {
     this.asNavFor2.push(this.$refs.main);
   },
   created() {
+    this.$emit('loaded', false);
     this.GET_PRODUCTS()
         .then((response) => {
           if (response.data) {
@@ -351,6 +354,7 @@ export default {
               this.variationsOption[3] = this.product.attributes[2].options[0];
               this.variationsOption[4] = this.product.attributes[3].options[0];
               this.getVariations();
+              this.$emit('loaded', true);
             }
           }
         });
@@ -358,6 +362,95 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+.product {
+  &__slider {
+    &-main {
+      margin-bottom: 30px;
 
+      &-item {
+        align-items: center;
+        box-sizing: border-box;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    &-thumb {
+      margin: 0 -5px;
+      width: calc(100% + 10px);
+
+      &-item {
+        cursor: pointer;
+        height: 100px;
+        padding: 0 5px;
+        transition: opacity 0.3s;
+
+        &:hover {
+          opacity: 0.75;
+        }
+
+        img {
+          height: 100%;
+          -o-object-fit: cover;
+          object-fit: cover;
+          -o-object-position: center;
+          object-position: center;
+          width: 100%;
+        }
+      }
+    }
+
+    img {
+      width: 100%;
+    }
+  }
+
+  &__variations {
+    margin: 30px 0;
+
+    span {
+      font-size: 20px;
+    }
+
+    .sup {
+      display: inline-block;
+      margin: 0 15px;
+    }
+  }
+
+  &__price {
+    font-size: 30px;
+    font-weight: $font-weight-bold;
+    font-family: sans-serif;
+  }
+
+  &__link-order {
+    display: inline-block;
+    margin: 30px 0 20px;
+    color: $gray;
+    text-decoration: none;
+    border-bottom: 1px solid $gray;
+    font-size: 20px;
+
+    &:hover, &:focus, &:active {
+      text-decoration: none;
+      color: $gray;
+    }
+  }
+
+  .modal-sizes {
+    color: $gray;
+    display: inline-block;
+    text-decoration: none;
+    border-bottom: 1px solid $gray;
+    margin: 0 0 15px;
+
+    &:hover, &:focus, &:active {
+      text-decoration: none;
+      color: $gray;
+    }
+  }
+}
 </style>

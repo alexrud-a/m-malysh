@@ -79,6 +79,7 @@ export default {
             this.content = response.data.content.rendered;
             this.meta = response.data.yoast_meta;
             this.metaTitle = response.data.yoast_title;
+            this.$emit('loaded', true);
           })
           .catch((error) => {
             console.log(error);
@@ -87,11 +88,22 @@ export default {
     },
   },
   created() {
+    this.$emit('loaded', false)
     this.getContent();
   }
 }
 </script>
 
-<style>
+<style lang="scss">
+.support {
+  .contact-form.form {
+    max-width: 100%;
 
+    .form-group {
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
 </style>

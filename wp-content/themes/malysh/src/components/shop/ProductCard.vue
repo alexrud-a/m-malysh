@@ -27,7 +27,7 @@
     <div class="product-card__price"
          v-html="price()">
     </div>
-    <b-btn class="product-card__wishlist"
+    <b-btn class="btn-transparent product-card__wishlist"
            :class="{'product-card__wishlist--add' : isWishList}"
            @click="changeWishList"
     >
@@ -128,6 +128,68 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+.product-card {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  position: relative;
 
+  &__badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+  }
+
+  &__img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    object-position: center;
+    margin-bottom: 25px;
+  }
+
+  &__article {
+    width: 100%;
+    color: #aaaaaa;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  &__title {
+    width: 100%;
+    color: #000;
+    font-size: 20px;
+    font-weight: $font-weight-bold;
+
+    &:hover {
+      color: $blue;
+      text-decoration: none;
+    }
+  }
+
+  &__price {
+    font-size: 16px;
+    font-weight: $font-weight-bold;
+    font-family: sans-serif;
+  }
+
+  &__wishlist {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+
+    &:hover, &:focus, &:active {
+      box-shadow: none;
+      background-color: transparent;
+    }
+
+    &--add {
+      svg {
+        fill: $blue;
+      }
+    }
+  }
+}
 </style>

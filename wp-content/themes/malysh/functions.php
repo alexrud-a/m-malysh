@@ -259,7 +259,7 @@ function form_function()
 
     if (!empty($_POST['form']['name']) && !empty($_POST['form']['tel']) && !empty($_POST['form']['email'])) {
         $message = '';
-        $to = 'alexrud-a@yandex.ru';//get_option('admin_email');
+        $to = get_option('admin_email');
         $headers = "Content-type: text/html; charset=utf-8";
         $headers .= "From: no-reply@mail.ru";
         $subject = "Сообщение с сайта " . $_SERVER['SERVER_NAME'];
@@ -306,7 +306,7 @@ function formRefund_function()
         !empty($_POST['formRefund']['productId'])
     ) {
         $message = '';
-        $to = 'alexrud-a@yandex.ru';//get_option('admin_email');
+        $to = get_option('admin_email');
         $headers = "Content-type: text/html; charset=utf-8";
         $headers .= "From: no-reply@mail.ru";
         $subject = "Заявка на возврат " . $_SERVER['SERVER_NAME'];
@@ -353,7 +353,7 @@ function order1click_function()
         !empty($_POST['form']['tel'])
     ) {
         $message = '';
-        $to = 'alexrud-a@yandex.ru';//get_option('admin_email');
+        $to = get_option('admin_email');
         $headers = "Content-type: text/html; charset=utf-8";
         $headers .= "From: no-reply@mail.ru";
         $subject = "Заявка на возврат " . $_SERVER['SERVER_NAME'];

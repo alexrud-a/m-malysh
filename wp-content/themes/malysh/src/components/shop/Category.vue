@@ -95,6 +95,7 @@ import {mapActions, mapGetters} from 'vuex'
 import {contains, containsAttributes} from "@/utils";
 import ProductFilter from "@/components/shop/ProductFilter";
 import ProductCard from "@/components/shop/ProductCard";
+import axios from "axios";
 
 export default {
   name: "Category",
@@ -274,11 +275,35 @@ export default {
       this.sortType = 'date';
       this.page = 1;
       this.products = this.sourcedProducts.slice();
+    },
+    getProductsByCat() {
+      this.GET_CATEGORIES()
+          .then((response) => {
+            if (response.data) {
+              this.category = response.data.slice().filter(cat => cat.slug === this.$route.params.slug)[0];
+              if(response.data.slice().filter(cat => cat.parent === this.category.id).length) {
+                this.filters.categories = response.data.slice().filter(cat => cat.parent === this.category.id);
+              }
+            }
+
+            this.GET_PRODUCTS()
+                .then((response) => {
+                  if (response.data) {
+                    this.sourcedProducts = response.data.slice().filter(product => contains(product.categories, [this.category.id], 'id')).sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
+                    this.products = this.sourcedProducts.slice();
+                    this.filters.price.min = Math.min(...this.products.slice().map(product => product.price));
+                    this.filters.price.max = Math.max(...this.products.slice().map(product => product.price));
+                    this.filters.selected_price.min = Math.min(...this.products.slice().map(product => product.price));
+                    this.filters.selected_price.max = Math.max(...this.products.slice().map(product => product.price));
+                  }
+                });
+          });
     }
   },
   watch: {
     $route(to, from) {
       if (from.path !== to.path) {
+        this.$emit('loaded', false);
         this.GET_CATEGORIES()
             .then((response) => {
               if (response.data) {
@@ -295,6 +320,7 @@ export default {
                       this.filters.price.max = Math.max(...this.products.slice().map(product => product.price));
                       this.filters.selected_price.min = Math.min(...this.products.slice().map(product => product.price));
                       this.filters.selected_price.max = Math.max(...this.products.slice().map(product => product.price));
+                      this.$emit('loaded', true);
                     }
                   });
             });
@@ -302,45 +328,39 @@ export default {
     }
   },
   created() {
-    this.GET_CATEGORIES()
-        .then((response) => {
-          if (response.data) {
-            this.category = response.data.slice().filter(cat => cat.slug === this.$route.params.slug)[0];
-            if(response.data.slice().filter(cat => cat.parent === this.category.id).length) {
-              this.filters.categories = response.data.slice().filter(cat => cat.parent === this.category.id);
-            }
+    // this.getProductsByCat();
+    // this.GET_SUBCATEGORIES()
+    //     .then((response) => {
+    //       if (response.data) {
+    //         this.filters.subCategories = response.data;
+    //       }
+    //     });
+    // this.GET_SIZES()
+    //     .then((response) => {
+    //       if (response.data) {
+    //         this.filters.sizes = response.data;
+    //       }
+    //     });
+    // this.GET_HEIGHT()
+    //     .then((response) => {
+    //       if (response.data) {
+    //         this.filters.height = response.data;
+    //       }
+    //     });
+    this.$emit('loaded', false);
+    axios.all([this.getProductsByCat(), this.GET_SUBCATEGORIES(), this.GET_SIZES(), this.GET_HEIGHT()])
+        .then(axios.spread((products, subcat, siz, heights) => {
+          if (subcat.data) {
+            this.filters.subCategories = subcat.data;
           }
-
-          this.GET_PRODUCTS()
-              .then((response) => {
-                if (response.data) {
-                  this.sourcedProducts = response.data.slice().filter(product => contains(product.categories, [this.category.id], 'id')).sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
-                  this.products = this.sourcedProducts.slice();
-                  this.filters.price.min = Math.min(...this.products.slice().map(product => product.price));
-                  this.filters.price.max = Math.max(...this.products.slice().map(product => product.price));
-                  this.filters.selected_price.min = Math.min(...this.products.slice().map(product => product.price));
-                  this.filters.selected_price.max = Math.max(...this.products.slice().map(product => product.price));
-                }
-              });
-        });
-    this.GET_SUBCATEGORIES()
-        .then((response) => {
-          if (response.data) {
-            this.filters.subCategories = response.data;
+          if (siz.data) {
+            this.filters.sizes = siz.data;
           }
-        });
-    this.GET_SIZES()
-        .then((response) => {
-          if (response.data) {
-            this.filters.sizes = response.data;
+          if (heights.data) {
+            this.filters.height = heights.data;
           }
-        });
-    this.GET_HEIGHT()
-        .then((response) => {
-          if (response.data) {
-            this.filters.height = response.data;
-          }
-        });
+          this.$emit('loaded', true)
+        }));
   }
 }
 </script>

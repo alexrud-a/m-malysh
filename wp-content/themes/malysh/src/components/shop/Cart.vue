@@ -464,7 +464,7 @@ export default {
       const data_order = {
         payment_method: this.select_payment.id,
         payment_method_title: this.select_payment.title,
-        set_paid: false,
+        set_paid: true,
         customer: this.USER.ID ? this.USER.ID : 0,
         customer_id: this.USER.ID ? this.USER.ID : 0,
         billing: {

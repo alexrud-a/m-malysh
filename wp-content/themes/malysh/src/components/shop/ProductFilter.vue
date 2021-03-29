@@ -83,26 +83,28 @@
 
       <!--Фильтр по цене-->
       <b-form-group v-if="filters.selected_price.min > 0 && filters.selected_price.max > 0">
-        <div class="filter-range">
-          <b-form-input type="range"
-                        v-model="filters.selected_price.min"
-                        :min="filters.price.min"
-                        :max="filters.price.max"
-                        @change="filteredProducts"
-          />
-          <b-form-input type="range"
-                        v-model="filters.selected_price.max"
-                        :min="filters.price.min"
-                        :max="filters.price.max"
-                        @change="filteredProducts"
-          />
-        </div>
-        <span class="price-min">
+        <div class="d-flex flex-wrap justify-content-between">
+          <div class="filter-range">
+            <b-form-input type="range"
+                          v-model="filters.selected_price.min"
+                          :min="filters.price.min"
+                          :max="filters.price.max"
+                          @change="filteredProducts"
+            />
+            <b-form-input type="range"
+                          v-model="filters.selected_price.max"
+                          :min="filters.price.min"
+                          :max="filters.price.max"
+                          @change="filteredProducts"
+            />
+          </div>
+          <span class="price-min">
                   {{ filters.selected_price.min }}
                 </span>
-        <span class="price-max">
+          <span class="price-max">
                   {{ filters.selected_price.max }}
                 </span>
+        </div>
       </b-form-group>
 
       <b-form-group>

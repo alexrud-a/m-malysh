@@ -54,11 +54,13 @@ export default {
       this.CHANGE_WISHLIST(product);
     },
     searching() {
+      this.$emit('loaded', false)
       WooCommerce.get('products', {
         search: this.$route.query.search,
       })
           .then((response) => {
             this.content = response.data;
+            this.$emit('loaded', true)
           })
           .catch((error) => {
             console.log(error);

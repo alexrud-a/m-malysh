@@ -74,6 +74,7 @@ export default {
   },
   methods: {
     getHistoryOrders() {
+      this.$emit('loaded', false);
       WooCommerce.get("orders", {
         per_page: 100,
         customer: this.USER.ID,
@@ -110,6 +111,7 @@ export default {
                   break;
               }
 
+              this.$emit('loaded', true)
               return order;
             });
           })

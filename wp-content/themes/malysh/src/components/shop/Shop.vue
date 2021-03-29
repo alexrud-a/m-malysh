@@ -298,42 +298,31 @@ export default {
     }
   },
   created() {
-    this.getContent();
-    this.GET_PRODUCTS()
-        .then((response) => {
-          if (response.data) {
-            this.sourcedProducts = response.data.sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
+    this.$emit('loaded', false);
+    axios.all([this.getContent(), this.GET_PRODUCTS(), this.GET_CATEGORIES(), this.GET_SUBCATEGORIES(), this.GET_SIZES(), this.GET_HEIGHT()])
+        .then(axios.spread((contents, products, cat, subcat, siz, heights) => {
+          if (products.data) {
+            this.sourcedProducts = products.data.sort((prev, next) => new Date(next.date_modified) - new Date(prev.date_modified));
             this.products = this.sourcedProducts.slice();
             this.filters.price.min = Math.min(...this.products.slice().map(product => product.price));
             this.filters.price.max = Math.max(...this.products.slice().map(product => product.price));
             this.filters.selected_price.min = Math.min(...this.products.slice().map(product => product.price));
             this.filters.selected_price.max = Math.max(...this.products.slice().map(product => product.price));
           }
-        });
-    this.GET_CATEGORIES()
-        .then((response) => {
-          if (response.data) {
-            this.filters.categories = response.data.slice().filter(cat => cat.parent === 0);
+          if (cat.data) {
+            this.filters.categories = cat.data.slice().filter(cat => cat.parent === 0);
           }
-        });
-    this.GET_SUBCATEGORIES()
-        .then((response) => {
-          if (response.data) {
-            this.filters.subCategories = response.data;
+          if (subcat.data) {
+            this.filters.subCategories = subcat.data;
           }
-        });
-    this.GET_SIZES()
-        .then((response) => {
-          if (response.data) {
-            this.filters.sizes = response.data;
+          if (siz.data) {
+            this.filters.sizes = siz.data;
           }
-        });
-    this.GET_HEIGHT()
-        .then((response) => {
-          if (response.data) {
-            this.filters.height = response.data;
+          if (heights.data) {
+            this.filters.height = heights.data;
           }
-        });
+          this.$emit('loaded', true)
+        }));
   }
 }
 </script>

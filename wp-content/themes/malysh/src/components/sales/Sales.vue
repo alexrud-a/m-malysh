@@ -77,6 +77,7 @@ export default {
             this.sales = response.data.acf.sales;
             this.meta = response.data.yoast_meta;
             this.metaTitle = response.data.yoast_title;
+            this.$emit('loaded', true)
           })
           .catch((error) => {
             console.log(error);
@@ -85,6 +86,7 @@ export default {
     },
   },
   created() {
+    this.$emit('loaded', false)
     this.getContent();
   }
 }

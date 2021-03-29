@@ -47,7 +47,7 @@
       </b-container>
     </div>
     <b-container class="pt-2 pb-2">
-      <b-row class="align-items-center">
+      <b-row class="align-items-center flex-nowrap flex-md-wrap">
         <b-col md="4" class="w-sm-60">
           <p class="header__slogan mb-0">
             Есть вопросы? - Позвони
@@ -58,12 +58,12 @@
             {{ contacts.phone }}
           </a>
         </b-col>
-        <b-col md="4" class="text-right text-md-center d-none d-sm-block">
+        <b-col md="4" class="text-right text-md-center d-none d-md-block">
           <router-link :to="{name: 'Home'}">
             <picture>
               <source media="(min-width: 768px)" :srcset="siteInfo.logo">
               <img :src="siteInfo.logoMin"
-                   class="img-fluid mb-2"
+                   class="img-fluid mb-4"
               />
             </picture>
           </router-link>
@@ -140,7 +140,7 @@
           <picture>
             <source media="(min-width: 768px)" :srcset="siteInfo.logo">
             <img :src="siteInfo.logoMin"
-                 class="img-fluid mb-2"
+                 class="img-fluid mb-4"
             />
           </picture>
         </router-link>

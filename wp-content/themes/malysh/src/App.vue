@@ -3,7 +3,7 @@
     <Preloader :isLoad="isLoad"/>
     <Header/>
     <transition name="slide">
-      <router-view class="content"/>
+      <router-view class="content" :isLoad="isLoad" @loaded="loaded"/>
     </transition>
     <Footer/>
   </div>
@@ -20,6 +20,11 @@ export default {
   data() {
     return {
       isLoad: false,
+    }
+  },
+  methods: {
+    loaded(isLoad) {
+      this.isLoad = isLoad
     }
   },
   components: {Preloader, Footer, Header},
