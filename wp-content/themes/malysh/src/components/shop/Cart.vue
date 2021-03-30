@@ -617,8 +617,11 @@ export default {
     },
     getPayShippings() {
       if (this.USER_CITY.postal_code !== null) {
-        this.getTotalPost(this.USER_CITY.postal_code);
-        this.getTotalCdek(this.USER_CITY.postal_code);
+        this.$emit('loaded', false);
+        axios.all([this.getTotalPost(this.user.postcode), this.getTotalCdek(this.user.postcode)])
+            .then(() => {
+              this.$emit('loaded', true)
+            });
       } else {
         this.custom_shippings = this.shippings.map(shipping => {
           shipping.pay = 0;
@@ -627,8 +630,11 @@ export default {
       }
     },
     changePostCode() {
-      this.getTotalPost(this.user.postcode);
-      this.getTotalCdek(this.user.postcode);
+      this.$emit('loaded', false);
+      axios.all([this.getTotalPost(this.user.postcode), this.getTotalCdek(this.user.postcode)])
+          .then(() => {
+            this.$emit('loaded', true)
+          });
     }
   },
   mounted() {
@@ -642,9 +648,11 @@ export default {
     }
   },
   created() {
-    this.getCountries();
-    this.getShipping();
-    this.getPayments();
+    this.$emit('loaded', false);
+    axios.all([this.getCountries(), this.getShipping(), this.getPayments()])
+        .then(() => {
+          this.$emit('loaded', true)
+        });
   }
 }
 </script>
