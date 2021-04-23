@@ -14,7 +14,7 @@
             @change="filteredProducts"
         >
           <b-form-checkbox
-              v-for="cat in filters.categories"
+              v-for="cat in filters.categories.slice().sort((a, b) => a.name - b.name)"
               :key="cat.id"
               :value="cat.id"
           >
@@ -33,7 +33,7 @@
             @change="filteredProducts"
         >
           <b-form-checkbox
-              v-for="subCat in filters.subCategories"
+              v-for="subCat in filters.subCategories.slice().sort((a, b) => a.name - b.name)"
               :key="subCat.id"
               :value="subCat.name"
           >
@@ -53,7 +53,7 @@
             @change="filteredProducts"
         >
           <b-form-checkbox
-              v-for="size in filters.sizes"
+              v-for="size in filters.sizes.slice().sort((a, b) => a.name - b.name)"
               :key="size.id"
               :value="size.name"
           >
@@ -72,7 +72,7 @@
             @change="filteredProducts"
         >
           <b-form-checkbox
-              v-for="item in filters.height"
+              v-for="item in filters.height.slice().sort((a, b) => a.name - b.name)"
               :key="item.id"
               :value="item.name"
           >

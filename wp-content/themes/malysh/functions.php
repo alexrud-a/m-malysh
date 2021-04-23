@@ -531,7 +531,7 @@ function registration_function() {
         !empty($_POST['register']['tel'])
     ) {
         $message = '';
-        $to = 'alexrud-a@yandex.ru';//get_option('admin_email');
+        $to = get_option('admin_email');
         $headers = "Content-type: text/html; charset=utf-8";
         $headers .= "From: no-reply@mail.ru";
         $subject = "Заявка на возврат " . $_SERVER['SERVER_NAME'];

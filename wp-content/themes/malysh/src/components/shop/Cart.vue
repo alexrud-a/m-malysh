@@ -18,6 +18,11 @@
           </h1>
         </b-col>
         <b-col lg="8" md="12">
+          <p class="alert-info mb-3">
+            Уважаемые покупатели! Обратите внимание, доставка транспортными компаниями осуществляется
+            бесплатно только до склада ТК (далее доставка оплачивается покупателем).
+            После оформления заказа вам будет выставлен и отправлен на электронную почту счет для оплаты.
+          </p>
           <h2>
             Выбранные товары
           </h2>
@@ -71,7 +76,7 @@
                 </div>
                 <div class="cart-products__td d-table-cell">
                   <template v-if="product.current && product.current.attributes">
-                    {{ product.current.attributes[1].option }}
+                    {{ product.current.attributes.find(attr => attr.id === 3).option }}
                   </template>
                   <template v-else>
                     -
@@ -80,7 +85,7 @@
                 <div class="cart-products__td d-table-cell">
                   <div class="cart-products__color"
                        v-if="product.current && product.current.attributes"
-                       :style="'background-color: '+product.current.attributes[3].option">
+                       :style="'background-color: '+product.current.attributes.find(attr => attr.id === 4).option">
                   </div>
                   <template v-else>
                     -
@@ -161,9 +166,9 @@
                         {{ shipping.pay | formattedPrice }} ₽
                       </template>
                       <template v-else>
-                        <p>
+                        <span>
                           {{ shipping.payErr }}
-                        </p>
+                        </span>
                       </template>
                   </span>
                   </b-form-radio>
@@ -182,6 +187,9 @@
                       :value="payment.id"
                   >
                     {{ payment.title }}
+                    <span>
+                      {{ payment.description }}
+                    </span>
                   </b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
@@ -773,6 +781,12 @@ export default {
 
   .shipping-pay {
     white-space: nowrap;
+  }
+
+  .alert-info {
+    background: $light;
+    padding: 20px 40px;
+    border-top: 3px solid $blue;
   }
 }
 </style>

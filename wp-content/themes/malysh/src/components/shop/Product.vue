@@ -17,7 +17,7 @@
           </b-breadcrumb-item>
         </b-breadcrumb>
       </b-col>
-      <b-col xl="7" lg="6" md="12">
+      <b-col xl="4" lg="5" md="12">
         <div class="product__slider" v-if="product.images.length">
           <VueAgile ref="main"
                     :options="options1"
@@ -29,7 +29,8 @@
                  :key="index"
                  class="product__slider-main-item"
                  :class="`slide--${index}`">
-              <img :src="slide.src" :alt="slide.alt"/>
+              <div class="product__slider-main-img" :style="'background-image: url('+slide.src+')'"></div>
+<!--              <img :src="slide.src" :alt="slide.alt"/>-->
             </div>
           </VueAgile>
           <VueAgile ref="thumbnails"
@@ -65,7 +66,7 @@
           <img src="/wp-content/plugins/woocommerce/assets/images/placeholder.png" class="img-fluid"/>
         </div>
       </b-col>
-      <b-col xl="5" lg="6" md="12">
+      <b-col xl="8" lg="7" md="12">
         <h1 class="mt-5">
           {{ product.name }}
         </h1>
@@ -107,14 +108,33 @@
             </b-form-radio-group>
           </b-form-group>
         </b-form>
-        <b-btn class="btn-blue mr-4"
-               @click="addCart"
-        >
-          <svg width="25" height="25" fill="#fff" class="mr-2">
-            <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#shopping-bag"/>
-          </svg>
-          В корзину
-        </b-btn>
+        <template v-if="product.type === 'variable'">
+          <template v-if="currentVariation.id">
+            <b-btn class="btn-blue mr-4 mb-2 mb-sm-0"
+                   @click="addCart"
+            >
+              <svg width="25" height="25" fill="#fff" class="mr-2">
+                <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#shopping-bag"/>
+              </svg>
+              В корзину
+            </b-btn>
+          </template>
+          <template v-else>
+            <p>
+              Товар с данными параметрами отсутствует
+            </p>
+          </template>
+        </template>
+        <template v-else>
+          <b-btn class="btn-blue mr-4 mb-2 mb-sm-0"
+                 @click="addCart"
+          >
+            <svg width="25" height="25" fill="#fff" class="mr-2">
+              <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#shopping-bag"/>
+            </svg>
+            В корзину
+          </b-btn>
+        </template>
         <b-btn class="btn-blue"
                @click="changeWishlist(product)"
         >
@@ -223,11 +243,7 @@ export default {
           }
         ]
       },
-      variationsOption: {
-        2: '',
-        3: '',
-        4: '',
-      },
+      variationsOption: {},
       variations: [],
       currentVariation: {},
     }
@@ -260,20 +276,18 @@ export default {
       this.activeSlide = event.nextSlide;
     },
     changeVariation() {
-      this.currentVariation = this.variations.slice().filter(item => {
-        return item.attributes.findIndex(attr => attr['option'] === this.variationsOption[2]) !== -1
-      }).filter(item => {
-        return item.attributes.findIndex(attr => attr['option'] === this.variationsOption[3]) !== -1
-      }).filter(item => {
-        return item.attributes.findIndex(attr => attr['option'] === this.variationsOption[4]) !== -1
-      })[0];
+      this.currentVariation = this.variations.find(product => {
+        let temp = product.attributes.map(attr => attr.option);
+        if(temp.every((val) => Object.values(this.variationsOption).includes(val))) {
+          return product
+        }
+      });
     },
     getVariations() {
       WooCommerce.get('products/' + this.product.id + '/variations')
           .then((response) => {
             this.variations = response.data;
             this.changeVariation();
-            return response;
           })
           .catch((error) => {
             console.log(error);
@@ -350,12 +364,15 @@ export default {
             this.product = response.data.filter(item => item.slug === this.$route.params.slug)[0];
             this.featured = response.data.filter(item => this.product.related_ids.findIndex(el => item.id === el) !== -1).slice(0, 3);
             if (this.product.type === 'variable' && this.product.attributes) {
-              this.variationsOption[2] = this.product.attributes[1].options[0];
-              this.variationsOption[3] = this.product.attributes[2].options[0];
-              this.variationsOption[4] = this.product.attributes[3].options[0];
+              this.product.attributes.forEach(attr => {
+                this.variationsOption[attr.id] = attr.options[0]
+              });
               this.getVariations();
-              this.$emit('loaded', true);
+              // this.product.attributes[1] ? this.variationsOption[2] = this.product.attributes[1].options[0] : null
+              // this.product.attributes[2] ? this.variationsOption[3] = this.product.attributes[2].options[0] : null
+              // this.product.attributes[3] ? this.variationsOption[4] = this.product.attributes[3].options[0] : null
             }
+            this.$emit('loaded', true);
           }
         });
   },
@@ -374,6 +391,14 @@ export default {
         color: #fff;
         display: flex;
         justify-content: center;
+      }
+
+      &-img {
+        width: 100%;
+        padding-top: 90%;
+        background-size: cover;
+        background-position: top center;
+        background-repeat: no-repeat;
       }
     }
 
@@ -404,6 +429,14 @@ export default {
 
     img {
       width: 100%;
+    }
+  }
+
+  .btn-blue {
+    width: 100%;
+
+    @media screen and (min-width: 576px){
+      width: auto;
     }
   }
 
@@ -451,6 +484,11 @@ export default {
       text-decoration: none;
       color: $gray;
     }
+  }
+
+  .custom-control {
+    display: inline-block;
+    margin-right: 20px;
   }
 }
 </style>

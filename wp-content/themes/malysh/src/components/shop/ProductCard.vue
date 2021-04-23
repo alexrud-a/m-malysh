@@ -1,6 +1,6 @@
 <template>
   <div class="product-card">
-    <router-link :to="{name: 'Product', params: {slug: product.slug}}">
+    <router-link :to="{name: 'Product', params: {slug: product.slug}}" class="w-100">
       <b-img v-if="product.images.length > 0"
              :src="product.images[0].src"
              :alt="product.images[0].alt"

@@ -26,7 +26,8 @@ import ru from '@/assets/ru.json';
 
 localize('ru', ru);
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+Vue.config.devtools = true;
 
 new Vue({
   render: h => h(App),
