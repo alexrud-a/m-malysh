@@ -60,32 +60,11 @@
           </b-col>
           <b-col md="4">
             <h3>
-              Мы в INSTAGRAM
+              Оплата
             </h3>
             <b-row>
-              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
-                <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
-              </b-col>
-              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
-                <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
-              </b-col>
-              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
-                <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
-              </b-col>
-              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
-                <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
-              </b-col>
-              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
-                <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
-              </b-col>
-              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
-                <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
-              </b-col>
-              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
-                <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
-              </b-col>
-              <b-col lg="3" md="4" sm="6" class="mb-2 w-sm-50">
-                <b-img thumbnail src="https://picsum.photos/125/125/?image=58"/>
+              <b-col lg="6" md="6" sm="6" class="mb-2 w-sm-50">
+                <b-img src="/wp-content/themes/malysh/img/pay.png"/>
               </b-col>
             </b-row>
           </b-col>

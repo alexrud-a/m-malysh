@@ -19,6 +19,14 @@
       </b-col>
       <b-col xl="4" lg="5" md="12">
         <div class="product__slider" v-if="product.images.length">
+          <vue-easy-lightbox
+              escDisabled
+              moveDisabled
+              :visible="visibleLightbox"
+              :imgs="product.images"
+              :index="activeSlide"
+              @hide="visibleLightbox = !visibleLightbox"
+          ></vue-easy-lightbox>
           <VueAgile ref="main"
                     :options="options1"
                     :as-nav-for="asNavFor1"
@@ -29,6 +37,11 @@
                  :key="index"
                  class="product__slider-main-item"
                  :class="`slide--${index}`">
+              <button @click="visibleLightbox = !visibleLightbox" class="btn btn-transparent btn-lightbox">
+                <svg width="25" height="25">
+                  <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#search"/>
+                </svg>
+              </button>
               <div class="product__slider-main-img" :style="'background-image: url('+slide.src+')'"></div>
 <!--              <img :src="slide.src" :alt="slide.alt"/>-->
             </div>
@@ -203,10 +216,11 @@ import {VueAgile} from 'vue-agile';
 import Order1Click from "@/components/forms/Order1Click";
 import TableSize from "@/components/modals/TableSize";
 import {formattedPrice} from "@/utils";
+import VueEasyLightbox from 'vue-easy-lightbox'
 
 export default {
   name: "Product",
-  components: {TableSize, Order1Click, ProductCard, VueAgile},
+  components: {TableSize, Order1Click, ProductCard, VueAgile, VueEasyLightbox},
   data() {
     return {
       product: {},
@@ -246,6 +260,7 @@ export default {
       variationsOption: {},
       variations: [],
       currentVariation: {},
+      visibleLightbox: false,
     }
   },
   metaInfo() {
@@ -400,6 +415,20 @@ export default {
         background-position: top center;
         background-repeat: no-repeat;
       }
+    }
+
+    .btn-lightbox {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+
+      svg {
+        fill: #fff;
+      }
+    }
+
+    .vel-img {
+      object-fit: cover;
     }
 
     &-thumb {
