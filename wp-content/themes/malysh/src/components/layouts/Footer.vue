@@ -59,12 +59,33 @@
             </b-nav>
           </b-col>
           <b-col md="4">
-            <h3>
-              Оплата
-            </h3>
             <b-row>
-              <b-col lg="6" md="6" sm="6" class="mb-2 w-sm-50">
+              <b-col lg="6" md="6" sm="6" class="mb-4 w-sm-50">
                 <b-img src="/wp-content/themes/malysh/img/pay.png"/>
+              </b-col>
+              <b-col sm="12" class="mb-2">
+                {{ contacts.ip }}
+              </b-col>
+              <b-col sm="12" class="mb-2">
+                Адрес: {{ contacts.address }}
+              </b-col>
+              <b-col sm="12" class="mb-2">
+                ОГРН: {{ contacts.ogrn }}
+              </b-col>
+              <b-col sm="12" class="mb-2">
+                ИНН: {{ contacts.inn }}
+              </b-col>
+              <b-col sm="12" class="mb-2">
+                <a :href="contacts.inst" class="pr-2">
+                  <svg width="30" height="30">
+                    <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#inst"/>
+                  </svg>
+                </a>
+                <a :href="contacts.vk">
+                  <svg width="30" height="30">
+                    <use xlink:href="/wp-content/themes/malysh/img/sprite.svg#vk"/>
+                  </svg>
+                </a>
               </b-col>
             </b-row>
           </b-col>
